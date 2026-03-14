@@ -8,19 +8,22 @@
 
 import Foundation
 import Combine
+import FactoryKit
 
 @Observable
 final class HomeViewModel
 {
-    var coins: [Coin] = []
-    let service: CoinService = .init()
+    private(set) var coins: [Coin] = []
+    
+    @ObservationIgnored
+    @Injected(\.coinService) private var coinService
     
     private var subscribers: Set<AnyCancellable> = []
     
     func getCoins()
     {
         do {
-            try service.fetchCoins(from: "urlsome")
+            try coinService.fetchCoins(from: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h")
         } catch {
             print("Error getting coins: \(error)")
         }
@@ -28,9 +31,27 @@ final class HomeViewModel
     
     func setCoinsBinding()
     {
-        service.$coins
+//        withObservationTracking {
+//            let _ = coinService.coins
+//        } onChange: { [weak self] in
+//            guard let self else {return}
+//            Task { @MainActor in
+//                self.coins = self.coinService.coins
+//                self.setCoinsBinding()
+//            }
+//        }
+
+        coinService.coins
+            .filter { !$0.isEmpty }
             .sink { [weak self] coins in
                 self?.coins = coins
+                print("Successfully fetched coins: \(coins.first!)")
+//                coins.forEach { coin in
+//                    print("======== New coin: \(coin) \n")
+//                }
             }.store(in: &subscribers)
     }
 }
+
+
+

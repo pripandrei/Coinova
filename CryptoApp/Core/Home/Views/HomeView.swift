@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View
 {
     @State private var currentNavigationStatus: NavigationStatus = .livePrices
+    @State private var viewModel: HomeViewModel = .init()
     
     var body: some View
     {
@@ -21,8 +22,13 @@ struct HomeView: View
             VStack
             {
                 header
-                Spacer()
+                coinsList
+//                Spacer()
             }
+        }
+        .onAppear {
+            viewModel.setCoinsBinding()
+            viewModel.getCoins()
         }
     }
 }
@@ -63,6 +69,15 @@ extension HomeView
            
         }
         .padding(.horizontal, 30)
+    }
+    
+    private var coinsList: some View
+    {
+        List(viewModel.coins) { coin in
+            CoinRowView(coin: coin)
+//                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        }
+        .listStyle(.plain)
     }
 }
 

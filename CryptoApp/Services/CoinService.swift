@@ -10,13 +10,14 @@ import Foundation
 
 protocol CointServiceProtocol
 {
+    var coins: CurrentValueSubject<[Coin], Never> { get }
     func fetchCoins(from url: String) throws
 }
 
+//@Observable
 final class CoinService: CointServiceProtocol
 {
-    @Published var coins: [Coin] = []
-    
+    private(set) var coins: CurrentValueSubject<[Coin], Never> = .init([])
     private var subscribers: Set<AnyCancellable> = []
     
     func fetchCoins(from url: String) throws
@@ -35,10 +36,10 @@ final class CoinService: CointServiceProtocol
                 switch completion
                 {
                 case .finished: break
-                case .failure(let error): print("Error: \(error)")
+                case .failure(let error): print("Error: \(error.localizedDescription)")
                 }
             } receiveValue: { [weak self] coins in
-                self?.coins = coins
+                self?.coins.send(coins)
             }.store(in: &subscribers)
 
     }
@@ -82,5 +83,4 @@ enum NetworkError: LocalizedError
         case .unexpectedStatusCode(let code): return "Unexpected status code: \(code)"
         }
     }
-    
 }
