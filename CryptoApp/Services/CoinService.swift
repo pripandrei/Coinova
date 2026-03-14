@@ -1,0 +1,86 @@
+//
+//  CoinService.swift
+//  CryptoApp
+//
+//  Created by Andrei Pripa on 3/14/26.
+//
+
+import Combine
+import Foundation
+
+protocol CointServiceProtocol
+{
+    func fetchCoins(from url: String) throws
+}
+
+final class CoinService: CointServiceProtocol
+{
+    @Published var coins: [Coin] = []
+    
+    private var subscribers: Set<AnyCancellable> = []
+    
+    func fetchCoins(from url: String) throws
+    {
+        guard let url = URL(string: url) else {throw NetworkError.invalidPath}
+        
+        URLSession.shared.dataTaskPublisher(for: url)
+//            .subscribe(on: DispatchQueue.global(qos: .background))
+            .tryMap { [weak self] in
+                try self?.handleURLResponse($0.response)
+                return $0.data
+            }
+            .decode(type: [Coin].self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion
+                {
+                case .finished: break
+                case .failure(let error): print("Error: \(error)")
+                }
+            } receiveValue: { [weak self] coins in
+                self?.coins = coins
+            }.store(in: &subscribers)
+
+    }
+    
+    private func handleURLResponse(_ response: URLResponse) throws
+    {
+        guard let response = response as? HTTPURLResponse else {
+            throw NetworkError.invalidRespons
+        }
+        
+        switch response.statusCode
+        {
+        case 200...300: break
+        case 401: throw NetworkError.unauthorized
+        case 404: throw NetworkError.notFound
+        case 500..<599: throw NetworkError.serverError(response.statusCode)
+        default: throw NetworkError.unexpectedStatusCode(response.statusCode)
+        }
+    }
+}
+
+
+enum NetworkError: LocalizedError
+{
+    case invalidPath
+    case invalidRespons
+    case unauthorized
+    case notFound
+    case serverError(Int)
+    case unexpectedStatusCode(Int)
+    
+    var errorDescription: String?
+    {
+        switch self
+        {
+        case .invalidPath: return "Invalid path"
+        case .invalidRespons: return "Invalid response"
+        case .unauthorized: return "Unauthorized"
+        case .notFound: return "Not found"
+        case .serverError(let code): return "Server error with code: \(code)"
+        case .unexpectedStatusCode(let code): return "Unexpected status code: \(code)"
+        }
+    }
+    
+}
