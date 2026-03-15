@@ -17,17 +17,10 @@ struct CoinRowView: View
     {
         HStack
         {
-            Text("\(coin.marketCapRank ?? 0)")
-                .font(.headline)
-                .fontWeight(.semibold)
-                .padding(.horizontal, 5)
-             
+            marketCap
 //            CoinImage(coin: coin)
             coinImage
-
-            Text(coin.symbol.uppercased())
-                .font(.title2)
-                .fontWeight(.semibold)
+            symbol
             
             Spacer()
             
@@ -38,6 +31,25 @@ struct CoinRowView: View
             currentPrice
         }
         .foregroundStyle(Color.theme.accent)
+    }
+}
+
+// MARK: - View components
+extension CoinRowView
+{
+    private var marketCap: some View
+    {
+        Text("\(coin.marketCapRank ?? 0)")
+            .font(.headline)
+            .fontWeight(.semibold)
+            .padding(.horizontal, 5)
+    }
+    
+    private var symbol: some View
+    {
+        Text(coin.symbol.uppercased())
+            .font(.title2)
+            .fontWeight(.semibold)
     }
     
     private var coinImage: some View
