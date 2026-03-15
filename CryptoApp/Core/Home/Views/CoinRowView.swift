@@ -26,22 +26,28 @@ struct CoinRowView: View
                 .frame(width: 40, height: 40)
 //                .background(.blue)
                 .clipShape(.circle)
+            
             Text(coin.symbol.uppercased())
                 .font(.title2)
                 .fontWeight(.semibold)
             
             Spacer()
             
+            if !coin.currentHoldingsValues.isZero
+            {
+                holdings                
+            }
             currentPrice
         }
+        .foregroundStyle(Color.theme.accent)
     }
     
     private var currentPrice: some View
     {
         VStack(alignment: .trailing)
         {
-            Text("\(coin.currentPrice)")
-            Text("\(coin.priceChangePercentage24h ?? 0.0)%")
+            Text("\(coin.currentPrice.asCurrenyWithDecimals())")
+            Text("\(coin.priceChangePercentage24h?.asCurrenyWithDecimals() ?? "0.00")%")
                 .foregroundStyle(Color.theme.green)
         }
         .font(.headline)
@@ -49,12 +55,13 @@ struct CoinRowView: View
     
     private var holdings: some View
     {
-        VStack(alignment: .trailing)
+        VStack(alignment: .center)
         {
-//            Text("\(coin.currentPrice)")
-//            Text("\(coin.priceChangePercentage24h ?? 0.0)%")
-//                .foregroundStyle(Color.theme.green)
+            Text("\(coin.currentHoldingsValues.asCurrenyWithDecimals())%")
+            Text("\(coin.currentHoldings?.asCurrenyWithDecimals() ?? "0.00")")
+                .foregroundStyle(Color.theme.accent)
         }
+        .padding(.trailing, 10)
         .font(.headline)
     }
 }
