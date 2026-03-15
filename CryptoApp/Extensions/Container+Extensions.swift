@@ -16,4 +16,14 @@ extension Container
             CoinService()
         }.singleton
     }
+    
+    var imageService: Factory<ImageDownloadable>
+    {
+        self { @MainActor in ImageLoader() }
+    }
+    
+    var cacheService: Factory<DataCacheable>
+    {
+        self { @MainActor in CacheService() }
+    }
 }

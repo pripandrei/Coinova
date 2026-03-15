@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import FactoryKit
 
 struct CoinRowView: View
 {
     let coin: Coin
+    @Injected(\.imageService) var imageService
+    @State private var _coinImage: Image?
     
     var body: some View
     {
@@ -19,14 +22,9 @@ struct CoinRowView: View
                 .font(.headline)
                 .fontWeight(.semibold)
                 .padding(.horizontal, 5)
-            
-            Image(systemName: "heart.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 40, height: 40)
-//                .background(.blue)
-                .clipShape(.circle)
-            
+             
+            coinImage
+
             Text(coin.symbol.uppercased())
                 .font(.title2)
                 .fontWeight(.semibold)
@@ -40,6 +38,31 @@ struct CoinRowView: View
             currentPrice
         }
         .foregroundStyle(Color.theme.accent)
+        .task {
+            do {
+                guard let imageData = try await imageService.loadImage(from: coin.image),
+                      let image = UIImage(data: imageData) else {return}
+                self._coinImage = Image(uiImage: image)
+            } catch {
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private var coinImage: some View
+    {
+        if let image = _coinImage
+        {
+            image
+                .resizable()
+                .scaledToFill()
+                .frame(width: 40, height: 40)
+                .clipShape(.circle)
+        } else {
+            ProgressView()
+                .frame(width: 40, height: 40)
+        }
     }
     
     private var currentPrice: some View
@@ -65,7 +88,7 @@ struct CoinRowView: View
         .font(.headline)
     }
 }
-
+  
 #Preview {
     let coins = DeveloperPreview.instance.coin
     CoinRowView(coin: coins)

@@ -16,6 +16,7 @@ class DeveloperPreview
         symbol: "btc",
         name: "Bitcoin",
         image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
+//        image: "https://img.freepik.com/free-vector/hand-painted-sunset-mountain-trees-landscape_1048-19076.jpg?semt=ais_hybrid&w=740&q=80",
         currentPrice: 67432.0,
         marketCap: 1_327_000_000_000,
         marketCapRank: 1,

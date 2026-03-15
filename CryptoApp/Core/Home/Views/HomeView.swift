@@ -25,7 +25,7 @@ struct HomeView: View
                 coinsList
 //                Spacer()
             }
-        }
+        } 
         .onAppear {
             viewModel.setCoinsBinding()
             viewModel.getCoins()
@@ -73,7 +73,7 @@ extension HomeView
     
     private var coinsList: some View
     {
-        List(viewModel.coins) { coin in
+        List(viewModel.coins) { coin in 
             CoinRowView(coin: coin)
 //                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
         }
