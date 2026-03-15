@@ -7,6 +7,7 @@
 
 import SwiftUI
 import FactoryKit
+import Kingfisher
 
 struct CoinRowView: View
 {
@@ -21,7 +22,8 @@ struct CoinRowView: View
                 .fontWeight(.semibold)
                 .padding(.horizontal, 5)
              
-            CoinImage(coin: coin)
+//            CoinImage(coin: coin)
+            coinImage
 
             Text(coin.symbol.uppercased())
                 .font(.title2)
@@ -36,6 +38,22 @@ struct CoinRowView: View
             currentPrice
         }
         .foregroundStyle(Color.theme.accent)
+    }
+    
+    private var coinImage: some View
+    {
+        KFImage(URL(string: coin.image))
+            .memoryCacheExpiration(.expired) // don't store in memory cache, only Disk cache
+            .cancelOnDisappear(true)
+            .placeholder({
+                ProgressView()
+                    .frame(width: 40, height: 40)
+            })
+            .resizable()
+            .scaledToFill()
+            .frame(width: 40, height: 40)
+            .clipShape(.circle)
+        
     }
 
     private var currentPrice: some View

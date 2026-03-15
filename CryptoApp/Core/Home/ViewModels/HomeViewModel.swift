@@ -44,7 +44,8 @@ final class HomeViewModel
         coinService.coins
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
-                self?.coins = Array(coins.prefix(10))
+//                self?.coins = Array(coins.prefix(10))
+                self?.coins = coins
 //                print("Successfully fetched coins: \(coins.first!)")
                 print("Successfully fetched coins: \(coins.first!.id)")
 //                coins.forEach { coin in
