@@ -14,10 +14,6 @@ struct CryptoAppApp: App
     {
         WindowGroup {
             HomeView()
-//            CoinRowView(coin: DeveloperPreview.instance.coin)
-//                .onAppear {
-////                    URLCache.shared.removeAllCachedResponses()
-//                }
         }
     }
 }
