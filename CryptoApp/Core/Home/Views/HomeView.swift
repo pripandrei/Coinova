@@ -19,9 +19,11 @@ struct HomeView: View
             Color.theme.background
                 .ignoresSafeArea()
          
-            VStack
+            VStack 
             {
                 header
+                HomeStatsView(showPortfolio: currentNavigationStatus == .portfolio)
+                    .padding(.top, 10)
                 coinsList
 //                Spacer()
             }
@@ -62,7 +64,7 @@ extension HomeView
                 .rotationEffect(.degrees(currentNavigationStatus == .livePrices ? 0 : 180))
                 .onTapGesture
             {
-                withAnimation(.linear(duration: 0.3))
+                withAnimation(.bouncy(duration: 0.5))
                 {
                     self.currentNavigationStatus = currentNavigationStatus == .livePrices ? .portfolio : .livePrices
                 }

@@ -9,47 +9,59 @@ import SwiftUI
 
 struct HomeStatsView: View
 {
-    @State var showPortfolio: Bool = true
+//    @State var showPortfolio: Bool = true
     @Environment(HomeViewModel.self) var homeVM
+    
+    var showPortfolio: Bool
+
+    private let spacing: CGFloat = 40
     
     var body: some View
     {
         GeometryReader { proxy in
-            HStack(spacing: 0) {
+            HStack(spacing: spacing) {
                 ForEach(homeVM.marketStatistics) { statisticData in
                     VStack
                     {
                         Text(statisticData.title)
+                            .font(.footnote)
+                            .fontWeight(.medium)
                         Text(statisticData.value)
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundStyle(Color.theme.accent)
                     }
-                    .frame(width: proxy.size.width / 3)
+                    .frame(width: (proxy.size.width / 3) - spacing)
+                    .frame(maxHeight: .infinity, alignment: .top)
+//                    .background(.green)
                 }
             }
+            .padding(.horizontal, spacing / 2)
             .frame(width: proxy.size.width,
-                   alignment: showPortfolio ? .leading : .trailing)
+                   alignment: showPortfolio ? .trailing : .leading)
             .frame(maxHeight: .infinity)
-            .background(.orange)
-        }
+//            .background(.orange)
+        } 
         .frame(height: 100)
-        .background(.blue.opacity(0.5))
+//        .background(.blue.opacity(0.5))
         .task {
-            homeVM.observe()
-            await homeVM.getMarketStats()
+//            homeVM.observe()
+//            await homeVM.getMarketStats()
         }
         
-        Button {
-            withAnimation(.snappy(duration: 0.5)) {
-                showPortfolio.toggle()
-            }
-        } label: {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(Color.blue)
-                .frame(width: 150, height: 50)
-                .overlay {
-                    Text("Tap me")
-                        .font(.title)
-                }
-        }
+//        Button {
+//            withAnimation(.snappy(duration: 0.5)) {
+//                showPortfolio.toggle()
+//            }
+//        } label: {
+//            RoundedRectangle(cornerRadius: 10)
+//                .fill(Color.blue)
+//                .frame(width: 150, height: 50)
+//                .overlay {
+//                    Text("Tap me")
+//                        .font(.title)
+//                }
+//        }
     }
 }
 
@@ -97,6 +109,9 @@ struct HomeStatsView2: View
 
 
 #Preview {
-    HomeStatsView()
+//    let homeVM = DeveloperPreview.instance.makeMockHomeViewModel()
+//    HomeStatsView(homeVM: homeVM)
+    HomeStatsView(showPortfolio: false)
+//        .environment(DeveloperPreview.instance.makeMockHomeViewModel())
         .environment(HomeViewModel())
 }

@@ -11,10 +11,21 @@ import Combine
 import FactoryKit
 
 @Observable
-final class HomeViewModel
+final class HomeViewModel: HomeViewModelProtocol
 {
     private(set) var coins: [Coin] = []
-    private(set) var marketStatistics: [StatisticModel] = []
+    private(set) var marketStatistics: [StatisticModel] = [
+            .init(title: StatisticModel.Title.marketCap.rawValue,
+                  value: "23.32323",
+                  percentageChange: 12.3),
+            .init(title: StatisticModel.Title.dayVolume.rawValue,
+                  value: "24.3"),
+            .init(title: StatisticModel.Title.BTCDominance.rawValue,
+                  value: "23.3"),
+            .init(title: StatisticModel.Title.portfolio.rawValue,
+                  value: "43.0",
+                  percentageChange: -3)
+    ]
     private var subscribers: Set<AnyCancellable> = []
     
     @ObservationIgnored

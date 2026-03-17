@@ -5,6 +5,9 @@
 //  Created by Andrei Pripa on 3/14/26.
 //
 
+import Foundation
+
+
 #if DEBUG
 class DeveloperPreview
 {
@@ -42,5 +45,12 @@ class DeveloperPreview
         priceChangePercentage24hInCurrency: 0.94,
         currentHoldings: 3.5
     )
+    
+    func makeMockHomeViewModel() -> MockHomeViewModel
+    {
+        let homeViewModelMock: MockHomeViewModel = .init()
+        return homeViewModelMock
+    }
 }
 #endif
+
