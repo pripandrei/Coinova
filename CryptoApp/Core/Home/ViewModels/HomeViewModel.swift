@@ -14,46 +14,72 @@ import FactoryKit
 final class HomeViewModel
 {
     private(set) var coins: [Coin] = []
+    private(set) var marketStatistics: [StatisticModel] = []
+    private var subscribers: Set<AnyCancellable> = []
     
     @ObservationIgnored
     @Injected(\.coinService) private var coinService
-    
-    private var subscribers: Set<AnyCancellable> = []
+    @ObservationIgnored
+    @Injected(\.marketDataService) private var marketDataService
     
     func getCoins()
     {
         do {
-            try coinService.fetchCoins(from: "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h")
+            try coinService.fetchCoins(from: APIEndpoint.coins.url)
         } catch {
-            print("Error getting coins: \(error)")
+            print("Error getting coins: \(error.localizedDescription)")
         }
     }
     
-    func setCoinsBinding()
+    func getMarketStats() async
     {
-//        withObservationTracking {
-//            let _ = coinService.coins
-//        } onChange: { [weak self] in
-//            guard let self else {return}
-//            Task { @MainActor in
-//                self.coins = self.coinService.coins
-//                self.setCoinsBinding()
-//            }
-//        }
-
+        do {
+            try await marketDataService.fetchData(from: APIEndpoint.marketData.url)
+        } catch {
+            print("Error getting market stats: \(error.localizedDescription)")
+        }
+    }
+    
+    func setupBindings()
+    {
+        observe()
+        
         coinService.coins
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
-//                self?.coins = Array(coins.prefix(10))
                 self?.coins = coins
-//                print("Successfully fetched coins: \(coins.first!)")
-                print("Successfully fetched coins: \(coins.first!.id)")
+//                print("Successfully fetched coins: \(coins.first!.id)")
 //                coins.forEach { coin in
 //                    print("======== New coin: \(coin) \n")
 //                }
             }.store(in: &subscribers)
     }
+    
+     func observe()
+    {
+        withObservationTracking {
+            _ = marketDataService.marketData
+        } onChange: {
+            Task { @MainActor in
+                defer {
+                    self.observe()
+                }
+                guard let marketData = self.marketDataService.marketData else {return}
+                
+                self.marketStatistics = [
+                    .init(title: StatisticModel.Title.marketCap.rawValue,
+                          value: marketData.data.marketCapUSD,
+                          percentageChange: marketData.data.marketCapChangePercentage24hUsd),
+                    .init(title: StatisticModel.Title.dayVolume.rawValue,
+                          value: marketData.data.totalVolumeUSD),
+                    .init(title: StatisticModel.Title.BTCDominance.rawValue,
+                          value: marketData.data.btcDominance),
+                    .init(title: StatisticModel.Title.portfolio.rawValue,
+                          value: "0.0", percentageChange: -3)
+                ]
+            }
+        }
+    }
 }
-
 
 

@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import FactoryKit
 import Kingfisher
 
 struct CoinRowView: View

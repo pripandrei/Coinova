@@ -27,9 +27,10 @@ struct HomeView: View
             }
         } 
         .onAppear {
-            viewModel.setCoinsBinding()
+            viewModel.setupBindings()
             viewModel.getCoins()
         }
+        .environment(viewModel)
     }
 }
 

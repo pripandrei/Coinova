@@ -26,4 +26,10 @@ extension Container
     {
         self { @MainActor in CacheService() }
     }
+    
+    var marketDataService: Factory<MarketDataServiceProtocol>
+    {
+        self { @MainActor in MarketDataService() }
+    }
+    
 }
