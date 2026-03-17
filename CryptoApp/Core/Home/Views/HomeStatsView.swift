@@ -63,7 +63,7 @@ extension HomeStatsView
     {
         return HStack {
             Image(systemName: value > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
-            Text("\(value.asCurrenyWithDecimals())%")
+            Text("\(value.asPercentWithDecimals())")
         }
         .foregroundStyle(value < 0 ? Color.theme.red : Color.theme.green)
     }

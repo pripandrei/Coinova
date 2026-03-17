@@ -72,7 +72,7 @@ extension CoinRowView
         VStack(alignment: .trailing)
         {
             Text("\(coin.currentPrice.asCurrenyWithDecimals())")
-            Text("\(coin.priceChangePercentage24h?.asCurrenyWithDecimals() ?? "0.00")%")
+            Text("\(coin.priceChangePercentage24h?.asDecimals() ?? "0.00")%")
                 .foregroundStyle(Color.theme.green)
         }
         .font(.headline)
@@ -82,8 +82,8 @@ extension CoinRowView
     {
         VStack(alignment: .center)
         {
-            Text("\(coin.currentHoldingsValues.asCurrenyWithDecimals())%")
-            Text("\(coin.currentHoldings?.asCurrenyWithDecimals() ?? "0.00")")
+            Text("\(coin.currentHoldingsValues.asCurrenyWithDecimals())")
+            Text("\(coin.currentHoldings?.asDecimals() ?? "0.00")")
                 .foregroundStyle(Color.theme.accent)
         }
         .padding(.trailing, 10)

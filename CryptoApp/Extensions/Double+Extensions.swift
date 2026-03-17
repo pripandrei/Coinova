@@ -20,14 +20,14 @@ extension Double
         case 1_000_000_000...: return String(format: "%.2fBn", self / 1_000_000_000)
         case 1_000_000...: return String(format: "%.2fM", self / 1_000_000)
         case 1_000...: return String(format: "%.2fK",  self / 1_000)
-        default: return String(format: "%.2K", self)
+        default: return String(format: "%.2fK", self)
         }
     }
     
-    static let formatter: NumberFormatter = {
+    static let currencyFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.locale = Locale(identifier: "de_DE")
+        formatter.numberStyle = .currency
+        formatter.locale = Locale(identifier: "en_US")
         formatter.minimumFractionDigits = 2
         formatter.maximumFractionDigits = 10
         
@@ -36,6 +36,15 @@ extension Double
     
     func asCurrenyWithDecimals() -> String
     {
-        return Self.formatter.string(from: (self as NSNumber)) ?? "\(self)"
+        return Self.currencyFormatter.string(from: (self as NSNumber)) ?? "\(self)"
+    }
+    
+    func asPercentWithDecimals() -> String {
+        String(format: "%.2f%%", self)
+    }
+    
+    func asDecimals(_ number: Int = 2) -> String
+    {
+        return String(format: "%.\(number)f", self)
     }
 }

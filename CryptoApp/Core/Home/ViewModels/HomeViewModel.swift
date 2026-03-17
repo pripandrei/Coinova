@@ -22,10 +22,10 @@ final class HomeViewModel: HomeViewModelProtocol
             .init(title: StatisticModel.Title.dayVolume.rawValue,
                   value: 3_640_000.47.abbreviated()),
             .init(title: StatisticModel.Title.BTCDominance.rawValue,
-                  value: "23.3%"),
+                  value: 54.34554.asPercentWithDecimals()),
             .init(title: StatisticModel.Title.portfolio.rawValue,
-                  value: 234.3434.abbreviated(),
-                  percentageChange: -3)
+                  value: 834.3434.abbreviated(),
+                  percentageChange: -3.0)
     ]
     private var subscribers: Set<AnyCancellable> = []
     
@@ -78,7 +78,7 @@ final class HomeViewModel: HomeViewModelProtocol
                     self.observe()
                 }
                 guard let marketData = self.marketDataService.marketData else {return}
-                
+
                 self.marketStatistics = [
                     .init(title: StatisticModel.Title.marketCap.rawValue,
                           value: marketData.data.marketCapUSD,
@@ -88,7 +88,7 @@ final class HomeViewModel: HomeViewModelProtocol
                     .init(title: StatisticModel.Title.BTCDominance.rawValue,
                           value: marketData.data.btcDominance),
                     .init(title: StatisticModel.Title.portfolio.rawValue,
-                          value: "0.0", percentageChange: -3)
+                          value: "0.0", percentageChange: -34.3)
                 ]
             }
         }
