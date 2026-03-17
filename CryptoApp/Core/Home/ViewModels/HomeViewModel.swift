@@ -14,16 +14,17 @@ import FactoryKit
 final class HomeViewModel: HomeViewModelProtocol
 {
     private(set) var coins: [Coin] = []
+    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
     private(set) var marketStatistics: [StatisticModel] = [
             .init(title: StatisticModel.Title.marketCap.rawValue,
-                  value: "23.32323",
+                  value: 6_623_640_000.32323.abbreviated(),
                   percentageChange: 12.3),
             .init(title: StatisticModel.Title.dayVolume.rawValue,
-                  value: "24.3"),
+                  value: 3_640_000.47.abbreviated()),
             .init(title: StatisticModel.Title.BTCDominance.rawValue,
-                  value: "23.3"),
+                  value: "23.3%"),
             .init(title: StatisticModel.Title.portfolio.rawValue,
-                  value: "43.0",
+                  value: 234.3434.abbreviated(),
                   percentageChange: -3)
     ]
     private var subscribers: Set<AnyCancellable> = []
@@ -58,7 +59,8 @@ final class HomeViewModel: HomeViewModelProtocol
         coinService.coins
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
-                self?.coins = coins
+                self?.coins = Array(coins.prefix(15))
+                print("Coinsssss: \(self!.coins)")
 //                print("Successfully fetched coins: \(coins.first!.id)")
 //                coins.forEach { coin in
 //                    print("======== New coin: \(coin) \n")

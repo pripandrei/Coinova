@@ -193,6 +193,6 @@ struct MarketData: Codable
     
     var btcDominance: String
     {
-        return String(marketCapPercentage["btc"] ?? 0.0)
+        return String(marketCapPercentage["btc"] ?? 0.0) + "%"
     }
 }

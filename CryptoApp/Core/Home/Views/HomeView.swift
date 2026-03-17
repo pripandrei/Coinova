@@ -12,6 +12,8 @@ struct HomeView: View
     @State private var currentNavigationStatus: NavigationStatus = .livePrices
     @State private var viewModel: HomeViewModel = .init()
     
+    
+    
     var body: some View
     {
         ZStack
@@ -19,13 +21,21 @@ struct HomeView: View
             Color.theme.background
                 .ignoresSafeArea()
          
-            VStack 
+            VStack
             {
                 header
                 HomeStatsView(showPortfolio: currentNavigationStatus == .portfolio)
                     .padding(.top, 10)
-                coinsList
-//                Spacer()
+                
+                switch currentNavigationStatus
+                {
+                case .livePrices:
+                    coinsList
+                        .transition(.move(edge: .leading))
+                case .portfolio:
+                    portfolioList
+                        .transition(.move(edge: .trailing))
+                }
             }
         } 
         .onAppear {
@@ -79,6 +89,14 @@ extension HomeView
         List(viewModel.coins) { coin in 
             CoinRowView(coin: coin)
 //                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        }
+        .listStyle(.plain)
+    }
+    
+    private var portfolioList: some View
+    {
+        List(viewModel.holdingCoins) { coin in
+            CoinRowView(coin: coin)
         }
         .listStyle(.plain)
     }

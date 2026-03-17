@@ -30,6 +30,13 @@ struct HomeStatsView: View
                             .font(.title2)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.theme.accent)
+                        
+                        if let percentage = statisticData.percentageChange,
+                           percentage != 0.0
+                        {
+                            percentageChangeSymbol(percentage)
+                        }
+                        
                     }
                     .frame(width: (proxy.size.width / 3) - spacing)
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -40,28 +47,25 @@ struct HomeStatsView: View
             .frame(width: proxy.size.width,
                    alignment: showPortfolio ? .trailing : .leading)
             .frame(maxHeight: .infinity)
-//            .background(.orange)
         } 
         .frame(height: 100)
-//        .background(.blue.opacity(0.5))
         .task {
 //            homeVM.observe()
 //            await homeVM.getMarketStats()
         }
-        
-//        Button {
-//            withAnimation(.snappy(duration: 0.5)) {
-//                showPortfolio.toggle()
-//            }
-//        } label: {
-//            RoundedRectangle(cornerRadius: 10)
-//                .fill(Color.blue)
-//                .frame(width: 150, height: 50)
-//                .overlay {
-//                    Text("Tap me")
-//                        .font(.title)
-//                }
-//        }
+    }
+}
+
+// Views components
+extension HomeStatsView
+{
+    private func percentageChangeSymbol(_ value: Double) -> some View
+    {
+        return HStack {
+            Image(systemName: value > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
+            Text("\(value.asCurrenyWithDecimals())%")
+        }
+        .foregroundStyle(value < 0 ? Color.theme.red : Color.theme.green)
     }
 }
 
