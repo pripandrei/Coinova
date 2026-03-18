@@ -12,8 +12,6 @@ struct HomeView: View
     @State private var currentNavigationStatus: NavigationStatus = .livePrices
     @State private var viewModel: HomeViewModel = .init()
     
-    
-    
     var body: some View
     {
         ZStack
