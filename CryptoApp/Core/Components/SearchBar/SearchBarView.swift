@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SearchBarView: View
 {
-    @State private var searchQuery: String = ""
     private let prompt = "Search for a coin"
+    @State private var searchQuery: String = ""
     
     var body: some View
     {
@@ -28,10 +28,11 @@ struct SearchBarView: View
             .foregroundStyle(Color.theme.accent)
             .fontWeight(.medium)
         }
-        .padding()
+        .padding(13)
+        .padding(.horizontal, 5)
         .background(Color.theme.background)
         .clipShape(RoundedRectangle(cornerRadius: 50))
-        .shadow(color: Color.theme.accent.opacity(0.4),
+        .shadow(color: Color.theme.accent.opacity(0.2),
                 radius: 10,
                 x: 0,
                 y: 0)

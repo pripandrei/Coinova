@@ -13,21 +13,10 @@ import FactoryKit
 @Observable
 final class HomeViewModel: HomeViewModelProtocol
 {
-//    private(set) var coins: [Coin] = []
+    // TODO: remove mock data when done testing
     private(set) var coins: [Coin] = Coin.mockCoins
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
-    private(set) var marketStatistics: [StatisticModel] = [
-            .init(title: StatisticModel.Title.marketCap.rawValue,
-                  value: 6_623_640_000.32323.abbreviated(),
-                  percentageChange: 12.3),
-            .init(title: StatisticModel.Title.dayVolume.rawValue,
-                  value: 3_640_000.47.abbreviated()),
-            .init(title: StatisticModel.Title.BTCDominance.rawValue,
-                  value: 54.34554.asPercentWithDecimals()),
-            .init(title: StatisticModel.Title.portfolio.rawValue,
-                  value: 834.3434.abbreviated(),
-                  percentageChange: -3.0)
-    ]
+    private(set) var marketStatistics: [StatisticModel] = StatisticModel.mockStatistics
     private var subscribers: Set<AnyCancellable> = []
     
     @ObservationIgnored
@@ -69,7 +58,7 @@ final class HomeViewModel: HomeViewModelProtocol
             }.store(in: &subscribers)
     }
     
-     func observe()
+    func observe()
     {
         withObservationTracking {
             _ = marketDataService.marketData
@@ -79,20 +68,29 @@ final class HomeViewModel: HomeViewModelProtocol
                     self.observe()
                 }
                 guard let marketData = self.marketDataService.marketData else {return}
-
-                self.marketStatistics = [
-                    .init(title: StatisticModel.Title.marketCap.rawValue,
-                          value: marketData.data.marketCapUSD,
-                          percentageChange: marketData.data.marketCapChangePercentage24hUsd),
-                    .init(title: StatisticModel.Title.dayVolume.rawValue,
-                          value: marketData.data.totalVolumeUSD),
-                    .init(title: StatisticModel.Title.BTCDominance.rawValue,
-                          value: marketData.data.btcDominance),
-                    .init(title: StatisticModel.Title.portfolio.rawValue,
-                          value: "0.0", percentageChange: -34.3)
-                ]
+                
+                self.marketStatistics = self.makeStatistics(from: marketData)
             }
         }
+    }
+    
+    private func makeStatistics(from data: GlobalData) -> [StatisticModel]
+    {
+        return [
+            .init(title: StatisticModel.Title.marketCap.rawValue,
+                  value: data.data.marketCapUSD,
+                  percentageChange: data.data.marketCapChangePercentage24hUsd),
+            
+            .init(title: StatisticModel.Title.dayVolume.rawValue,
+                  value: data.data.totalVolumeUSD),
+            
+            .init(title: StatisticModel.Title.BTCDominance.rawValue,
+                  value: data.data.btcDominance),
+            
+            .init(title: StatisticModel.Title.portfolio.rawValue,
+                  value: "0.0",
+                  percentageChange: -34.3)
+        ]
     }
 }
 

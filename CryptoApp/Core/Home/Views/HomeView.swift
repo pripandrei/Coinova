@@ -25,6 +25,9 @@ struct HomeView: View
                 HomeStatsView(showPortfolio: currentNavigationStatus == .portfolio)
                     .padding(.top, 10)
                 
+                SearchBarView()
+                    .padding(.vertical, 20)
+                
                 switch currentNavigationStatus
                 {
                 case .livePrices:

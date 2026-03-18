@@ -10,7 +10,7 @@ import SwiftUI
 struct NavigationButton: View
 {
     let iconName: String
-    private let buttonSize: CGSize = .init(width: 50, height: 50)
+    private let buttonSize: CGSize = .init(width: 45, height: 45)
     
     var body: some View
     {
@@ -23,9 +23,13 @@ struct NavigationButton: View
                 Circle()
                     .fill(Color.theme.background)
             )
-            .shadow(color: Color.theme.accent.opacity(0.50),
+            .shadow(color: Color.theme.accent.opacity(0.2),
                     radius: 10,
                     x: 0,
                     y: 0)
     }
+}
+
+#Preview {
+    NavigationButton(iconName: "plus")
 }

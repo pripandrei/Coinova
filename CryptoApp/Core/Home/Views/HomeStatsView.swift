@@ -44,11 +44,13 @@ struct HomeStatsView: View
                    alignment: showPortfolio ? .trailing : .leading)
             .frame(maxHeight: .infinity)
         } 
-        .frame(height: 100)
+        .frame(height: 70)
         .task {
+            // TODO: - uncomment when done testing-
 //            homeVM.observe()
 //            await homeVM.getMarketStats()
         }
+//        .background(.blue)
     }
 }
 
