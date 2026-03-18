@@ -25,6 +25,7 @@ struct SearchBarView: View
                 text: $searchQuery,
                 prompt: Text(prompt).fontWeight(.regular)
             )
+            .removePredictiveSuggestions()
             .foregroundStyle(Color.theme.accent)
             .fontWeight(.medium)
         }
@@ -57,6 +58,7 @@ struct SearchBarView: View
             .opacity(searchQuery.isEmpty ? 0 : 1)
             .animation(.bouncy, value: searchQuery)
             .onTapGesture {
+                UIApplication.shared.endEditing()
                 searchQuery = ""
             }
     }
@@ -65,3 +67,5 @@ struct SearchBarView: View
 #Preview {
     SearchBarView()
 }
+
+
