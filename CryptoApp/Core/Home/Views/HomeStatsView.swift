@@ -9,34 +9,30 @@ import SwiftUI
 
 struct HomeStatsView: View
 {
-//    @State var showPortfolio: Bool = true
-    @Environment(HomeViewModel.self) var homeVM
-    
+    private let spacing: CGFloat = 20
     var showPortfolio: Bool
-
-    private let spacing: CGFloat = 40
+    @Environment(HomeViewModel.self) var homeVM
     
     var body: some View
     {
         GeometryReader { proxy in
             HStack(spacing: spacing) {
                 ForEach(homeVM.marketStatistics) { statisticData in
-                    VStack
+                    VStack(alignment: .leading)
                     {
                         Text(statisticData.title)
-                            .font(.footnote)
+                            .font(.subheadline)
                             .fontWeight(.medium)
                         Text(statisticData.value)
-                            .font(.title2)
+                            .font(.title3)
                             .fontWeight(.semibold)
                             .foregroundStyle(Color.theme.accent)
-                        
+
                         if let percentage = statisticData.percentageChange,
                            percentage != 0.0
                         {
                             percentageChangeSymbol(percentage)
                         }
-                        
                     }
                     .frame(width: (proxy.size.width / 3) - spacing)
                     .frame(maxHeight: .infinity, alignment: .top)
@@ -65,6 +61,7 @@ extension HomeStatsView
             Image(systemName: value > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
             Text("\(value.asPercentWithDecimals())")
         }
+        .fontWeight(.medium)
         .foregroundStyle(value < 0 ? Color.theme.red : Color.theme.green)
     }
 }

@@ -8,46 +8,64 @@
 import SwiftUI
 import Kingfisher
 
+
 struct CoinRowView: View
 {
+    @Environment(\.displayScale) var displayScale
     let coin: Coin
+    @State private var screenWidth: CGFloat = 0.0
     
     var body: some View
     {
-        HStack
+        ZStack
         {
-            marketCap
-//            CoinImage(coin: coin)
-            coinImage
-            symbol
-            
-            Spacer()
-            
-            if !coin.currentHoldingsValues.isZero
+//            Color.clear
+//                .onGeometryChange(for: CGFloat.self) { proxy in
+//                    proxy.size.width
+//                } action: { newValue in
+//                    self.screenWidth = newValue
+//                }
+//            
+            HStack
             {
-                holdings                
+                marketRank
+                //            CoinImage(coin: coin)
+                coinImage
+                symbol
+                
+                Spacer()
+                
+                if !coin.currentHoldingsValues.isZero
+                {
+                    holdings
+                }
+                currentPrice
+                    .containerRelativeFrame(.horizontal, alignment: .trailing) { width, _ in
+                        width / 3.5
+                        // See FootNote.swift - [1]
+                    }
             }
-            currentPrice
+            .foregroundStyle(Color.theme.accent)
         }
-        .foregroundStyle(Color.theme.accent)
     }
 }
 
 // MARK: - View components
 extension CoinRowView
 {
-    private var marketCap: some View
+    private var marketRank: some View
     {
         Text("\(coin.marketCapRank ?? 0)")
             .font(.headline)
             .fontWeight(.semibold)
-            .padding(.horizontal, 5)
+            .frame(width: 30)
+//            .padding(.horizontal, 5)
     }
     
     private var symbol: some View
     {
         Text(coin.symbol.uppercased())
-            .font(.title2)
+            .font(.headline)
             .fontWeight(.semibold)
     }
     
@@ -58,24 +76,13 @@ extension CoinRowView
             .cancelOnDisappear(true)
             .placeholder({
                 ProgressView()
-                    .frame(width: 40, height: 40)
+                    .frame(width: 30, height: 30)
             })
             .resizable()
             .scaledToFill()
-            .frame(width: 40, height: 40)
+            .frame(width: 30, height: 30)
             .clipShape(.circle)
         
-    }
-
-    private var currentPrice: some View
-    {
-        VStack(alignment: .trailing)
-        {
-            Text("\(coin.currentPrice.asCurrenyWithDecimals())")
-            Text("\(coin.priceChangePercentage24h?.asDecimals() ?? "0.00")%")
-                .foregroundStyle(Color.theme.green)
-        }
-        .font(.headline)
     }
     
     private var holdings: some View
@@ -83,11 +90,25 @@ extension CoinRowView
         VStack(alignment: .center)
         {
             Text("\(coin.currentHoldingsValues.asCurrenyWithDecimals())")
+                .font(.headline)
             Text("\(coin.currentHoldings?.asDecimals() ?? "0.00")")
+                .font(.subheadline)
+                .fontWeight(.semibold)
                 .foregroundStyle(Color.theme.accent)
         }
-        .padding(.trailing, 10)
-        .font(.headline)
+    }
+    
+    private var currentPrice: some View
+    {
+        VStack(alignment: .trailing)
+        {
+            Text("\(coin.currentPrice.asCurrenyWithDecimals())")
+                .font(.headline)
+            Text("\(coin.priceChangePercentage24h?.asDecimals() ?? "0.00")%")
+                .font(.subheadline)
+                .fontWeight(.semibold)
+                .foregroundStyle(Color.theme.green)
+        }
     }
 }
   

@@ -13,7 +13,8 @@ import FactoryKit
 @Observable
 final class HomeViewModel: HomeViewModelProtocol
 {
-    private(set) var coins: [Coin] = []
+//    private(set) var coins: [Coin] = []
+    private(set) var coins: [Coin] = Coin.mockCoins
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
     private(set) var marketStatistics: [StatisticModel] = [
             .init(title: StatisticModel.Title.marketCap.rawValue,

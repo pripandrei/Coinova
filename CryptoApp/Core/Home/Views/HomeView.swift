@@ -88,7 +88,10 @@ extension HomeView
     {
         List(viewModel.coins) { coin in 
             CoinRowView(coin: coin)
-//                        .listRowInsets(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+                        .listRowInsets(EdgeInsets(top: 10,
+                                                  leading: 5,
+                                                  bottom: 10,
+                                                  trailing: 15))
         }
         .listStyle(.plain)
     }
@@ -97,6 +100,10 @@ extension HomeView
     {
         List(viewModel.holdingCoins) { coin in
             CoinRowView(coin: coin)
+                .listRowInsets(EdgeInsets(top: 10,
+                                          leading: 5,
+                                          bottom: 10,
+                                          trailing: 15))
         }
         .listStyle(.plain)
     }

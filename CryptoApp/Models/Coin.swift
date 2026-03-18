@@ -116,7 +116,7 @@ struct SparklineIn7d: Codable
 
 
 
-
+//MARK: Mock data
 extension Coin
 {
     static let mockHoldings: [Coin] = [
