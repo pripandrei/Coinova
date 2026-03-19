@@ -9,7 +9,7 @@ import SwiftUI
 
 struct HomeView: View
 {
-    @State private var currentNavigationStatus: NavigationStatus = .livePrices
+//    @State private var currentNavigationStatus: NavigationStatus = .livePrices
     @State private var viewModel: HomeViewModel = .init()
     
     var body: some View
@@ -22,13 +22,13 @@ struct HomeView: View
             VStack
             {
                 header
-                HomeStatsView(showPortfolio: currentNavigationStatus == .portfolio)
+                HomeStatsView(showPortfolio: viewModel.displayMode == .portfolio)
                     .padding(.top, 10)
                 
-                SearchBarView()
+                SearchBarView(searchQuery: $viewModel.searchQuery)
                     .padding(.vertical, 20)
                 
-                switch currentNavigationStatus
+                switch viewModel.displayMode
                 {
                 case .livePrices:
                     coinsList
@@ -40,7 +40,7 @@ struct HomeView: View
             }
         } 
         .onAppear {
-            viewModel.setupBindings()
+            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
             viewModel.getCoins()
         }
         .environment(viewModel)
@@ -54,7 +54,7 @@ extension HomeView
     {
         HStack
         {
-            NavigationButton(iconName: currentNavigationStatus == .livePrices ? "info" : "plus")
+            NavigationButton(iconName: viewModel.displayMode == .livePrices ? "info" : "plus")
                 .background(
                     InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
                 )
@@ -64,7 +64,7 @@ extension HomeView
             
             Spacer()
             
-            Text(currentNavigationStatus.title)
+            Text(viewModel.displayMode.title)
                 .font(.title3)
                 .fontWeight(.semibold)
                 .animation(nil)
@@ -72,12 +72,12 @@ extension HomeView
             Spacer()
             
             NavigationButton(iconName: "chevron.right")
-                .rotationEffect(.degrees(currentNavigationStatus == .livePrices ? 0 : 180))
+                .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
                 .onTapGesture
             {
                 withAnimation(.bouncy(duration: 0.5))
                 {
-                    self.currentNavigationStatus = currentNavigationStatus == .livePrices ? .portfolio : .livePrices
+                    self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
                 }
             }
            
@@ -87,7 +87,9 @@ extension HomeView
     
     private var coinsList: some View
     {
-        List(viewModel.coins) { coin in 
+        let coins = (viewModel.searchedCoins.isEmpty && viewModel.searchQuery.isEmpty) ? viewModel.coins : viewModel.searchedCoins
+        
+        return List(coins) { coin in
             CoinRowView(coin: coin)
                         .listRowInsets(EdgeInsets(top: 10,
                                                   leading: 5,
@@ -99,7 +101,9 @@ extension HomeView
     
     private var portfolioList: some View
     {
-        List(viewModel.holdingCoins) { coin in
+        let coins = (viewModel.searchedCoins.isEmpty && viewModel.searchQuery.isEmpty) ? viewModel.holdingCoins : viewModel.searchedCoins
+        
+        return List(coins) { coin in
             CoinRowView(coin: coin)
                 .listRowInsets(EdgeInsets(top: 10,
                                           leading: 5,
@@ -107,6 +111,7 @@ extension HomeView
                                           trailing: 15))
         }
         .listStyle(.plain)
+        
     }
 }
 
@@ -115,27 +120,27 @@ extension HomeView
 {
     private func shouldAnimateInfoButton() -> Bool
     {
-        return currentNavigationStatus == .livePrices ? false : true
+        return viewModel.displayMode == .livePrices ? false : true
     }
 }
 
-extension HomeView
-{
-    enum NavigationStatus
-    {
-        case livePrices
-        case portfolio
-        
-        var title: String
-        {
-            switch self
-            {
-            case .livePrices: return "Live Prices"
-            case .portfolio: return "Portfolio"
-            }
-        }
-    }
-}
+//extension HomeView
+//{
+//    enum NavigationStatus
+//    {
+//        case livePrices
+//        case portfolio
+//        
+//        var title: String
+//        {
+//            switch self
+//            {
+//            case .livePrices: return "Live Prices"
+//            case .portfolio: return "Portfolio"
+//            }
+//        }
+//    }
+//}
 
 #Preview {
     HomeView()

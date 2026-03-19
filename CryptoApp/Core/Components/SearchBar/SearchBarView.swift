@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SearchBarView: View
 {
-    private let prompt = "Search for a coin"
-    @State private var searchQuery: String = ""
+    private let prompt = "Search for coin..."
+    @Binding var searchQuery: String
     
     var body: some View
     {
@@ -65,7 +65,7 @@ struct SearchBarView: View
 }
 
 #Preview {
-    SearchBarView()
+    SearchBarView(searchQuery: .constant(""))
 }
 
 
