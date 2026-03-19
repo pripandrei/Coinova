@@ -16,7 +16,7 @@ final class HomeViewModel: HomeViewModelProtocol
     // TODO: remove mock data when done testing
     private(set) var coins: [Coin] = Coin.mockCoins
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
-    private(set) var searchedCoins: [Coin] = []
+    private(set) var searchedCoins: [Coin]? 
     private(set) var marketStatistics: [StatisticModel] = StatisticModel.mockStatistics
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
@@ -135,8 +135,9 @@ extension HomeViewModel
     
     private func searchCoins(query: String)
     {
-        guard !query.isEmpty else {
-            self.searchedCoins = []
+        guard !query.isEmpty else
+        {
+            self.searchedCoins = nil
             return
         }
         
@@ -163,17 +164,3 @@ extension HomeViewModel
     }
 }
 
-enum HomeDisplayMode
-{
-    case livePrices
-    case portfolio
-    
-    var title: String
-    {
-        switch self
-        {
-        case .livePrices: return "Live Prices"
-        case .portfolio: return "Portfolio"
-        }
-    }
-}

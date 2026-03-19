@@ -86,7 +86,7 @@ extension HomeView
     
     private var coinsList: some View
     {
-        let coins = (viewModel.searchedCoins.isEmpty && viewModel.searchQuery.isEmpty) ? viewModel.coins : viewModel.searchedCoins
+        let coins = viewModel.searchedCoins ?? viewModel.coins
         
         return List(coins) { coin in
             CoinRowView(coin: coin)
@@ -101,7 +101,7 @@ extension HomeView
     
     private var portfolioList: some View
     {
-        let coins = (viewModel.searchedCoins.isEmpty && viewModel.searchQuery.isEmpty) ? viewModel.holdingCoins : viewModel.searchedCoins
+        let coins = viewModel.searchedCoins ?? viewModel.holdingCoins
         
         return List(coins) { coin in
             CoinRowView(coin: coin)
