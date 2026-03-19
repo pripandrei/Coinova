@@ -30,7 +30,14 @@ struct HomeView: View
                 
                 coinListHeader
                 
-                contentList
+                ZStack
+                {
+                    contentList
+                    if viewModel.searchedCoins?.isEmpty == true
+                    {
+                        noCoinDataView
+                    }
+                }
             }
         } 
         .onAppear {
@@ -150,6 +157,21 @@ extension HomeView
             CoinListView(coins: viewModel.searchedCoins ?? viewModel.holdingCoins)
                 .transition(.move(edge: .trailing))
         }
+    }
+    
+    private var noCoinDataView: some View
+    {
+        VStack {
+            Image(systemName: "text.page.badge.magnifyingglass")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 100, height: 100)
+                .fontWeight(.light)
+            
+            Text("No coins found")
+                .font(.headline)
+        }
+        .foregroundStyle(Color.theme.secondaryText)
     }
 }
 
