@@ -74,7 +74,9 @@ extension CoinRowView
         KFImage(URL(string: coin.image))
             .memoryCacheExpiration(.expired) // don't store in memory cache, only Disk cache
             .cancelOnDisappear(true)
-            .placeholder({
+//            .cacheOriginalImage()
+//            .fade(duration: 0.1)
+            .placeholder({ progress in
                 ProgressView()
                     .frame(width: 30, height: 30)
             })
@@ -82,7 +84,7 @@ extension CoinRowView
             .scaledToFill()
             .frame(width: 30, height: 30)
             .clipShape(.circle)
-        
+            .transaction { $0.animation = nil }
     }
     
     private var holdings: some View

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct HomeView: View
 {
-//    @State private var currentNavigationStatus: NavigationStatus = .livePrices
     @State private var viewModel: HomeViewModel = .init()
     
     var body: some View
@@ -33,11 +32,9 @@ struct HomeView: View
                 case .livePrices:
                     coinsList
                         .transition(.move(edge: .leading))
-//                        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
                 case .portfolio:
                     portfolioList
                         .transition(.move(edge: .trailing))
-//                        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
                 }
             }
         } 
@@ -99,9 +96,7 @@ extension HomeView
                                                   trailing: 15))
         }
         .listStyle(.plain)
-//        .animation(.linear, value: viewModel.searchedCoins)
-//        .opacity(viewModel.displayMode == .livePrices ? 1 : 0)
-//        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
+        .animation(.easeOut, value: viewModel.searchedCoins)
     }
     
     private var portfolioList: some View
@@ -116,9 +111,7 @@ extension HomeView
                                           trailing: 15))
         }
         .listStyle(.plain)
-//        .animation(.linear, value: viewModel.searchedCoins)
-//        .opacity(viewModel.displayMode == .portfolio ? 1 : 0)
-//        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
+        .animation(.easeOut, value: viewModel.searchedCoins)
     }
 }
 
@@ -130,24 +123,6 @@ extension HomeView
         return viewModel.displayMode == .livePrices ? false : true
     }
 }
-
-//extension HomeView
-//{
-//    enum NavigationStatus
-//    {
-//        case livePrices
-//        case portfolio
-//        
-//        var title: String
-//        {
-//            switch self
-//            {
-//            case .livePrices: return "Live Prices"
-//            case .portfolio: return "Portfolio"
-//            }
-//        }
-//    }
-//}
 
 #Preview {
     HomeView()

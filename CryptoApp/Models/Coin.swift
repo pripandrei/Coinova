@@ -7,7 +7,7 @@
 
 // API : https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h
 
-//JSON Data :
+// JSON DATA:
 //{
 //    "id": "bitcoin",
 //    "symbol": "btc",
@@ -39,7 +39,7 @@
 //      "price": [67991.1035699002, 67916.103289176, 68019.1601918745, 67899.1508484934, 67801.0163226986 ...]
 //    },
 //    "price_change_percentage_24h_in_currency": -1.98693284435742
-//  }, ...
+//  }
 
 import Foundation
 
@@ -114,12 +114,11 @@ struct SparklineIn7d: Codable
     let price: [Double]
 }
 
-//extension Coin: Equatable
-//{
-//    static func == (lhs: Coin, rhs: Coin) -> Bool {
-//        lhs.id == rhs.id
-//    }
-//    
-//    
-//}
+extension Coin: Equatable
+{
+    static func == (lhs: Coin, rhs: Coin) -> Bool
+    {
+        lhs.id == rhs.id && lhs.currentHoldings == rhs.currentHoldings
+    }
+}
 

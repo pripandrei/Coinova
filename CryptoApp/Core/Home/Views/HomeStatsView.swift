@@ -9,14 +9,14 @@ import SwiftUI
 
 struct HomeStatsView: View
 {
-    private let spacing: CGFloat = 20
+    private let spacing: CGFloat = 15
     var showPortfolio: Bool
     @Environment(HomeViewModel.self) var homeVM
     
     var body: some View
     {
         GeometryReader { proxy in
-            HStack(spacing: spacing) {
+            HStack(spacing: spacing - 5) {
                 ForEach(homeVM.marketStatistics) { statisticData in
                     VStack(alignment: .leading)
                     {
@@ -63,6 +63,7 @@ extension HomeStatsView
             Image(systemName: value > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
             Text("\(value.asPercentWithDecimals())")
         }
+        .font(.subheadline)
         .fontWeight(.medium)
         .foregroundStyle(value < 0 ? Color.theme.red : Color.theme.green)
     }
