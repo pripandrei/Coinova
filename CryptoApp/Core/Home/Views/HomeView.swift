@@ -33,15 +33,17 @@ struct HomeView: View
                 case .livePrices:
                     coinsList
                         .transition(.move(edge: .leading))
+//                        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
                 case .portfolio:
                     portfolioList
                         .transition(.move(edge: .trailing))
+//                        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
                 }
             }
         } 
         .onAppear {
-            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
-            viewModel.getCoins()
+//            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
+//            viewModel.getCoins()
         }
         .environment(viewModel)
     }
@@ -97,6 +99,9 @@ extension HomeView
                                                   trailing: 15))
         }
         .listStyle(.plain)
+//        .animation(.linear, value: viewModel.searchedCoins)
+//        .opacity(viewModel.displayMode == .livePrices ? 1 : 0)
+//        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
     }
     
     private var portfolioList: some View
@@ -111,7 +116,9 @@ extension HomeView
                                           trailing: 15))
         }
         .listStyle(.plain)
-        
+//        .animation(.linear, value: viewModel.searchedCoins)
+//        .opacity(viewModel.displayMode == .portfolio ? 1 : 0)
+//        .animation(.easeInOut(duration: 0.5), value: viewModel.displayMode)
     }
 }
 
