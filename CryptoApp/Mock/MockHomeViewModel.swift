@@ -16,7 +16,6 @@ protocol HomeViewModelProtocol: AnyObject {
     
     func getCoins()
     func getMarketStats() async
-    func observe()
 }
 
 @Observable

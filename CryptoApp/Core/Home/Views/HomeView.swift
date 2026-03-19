@@ -21,6 +21,7 @@ struct HomeView: View
             VStack
             {
                 header
+                
                 HomeStatsView(showPortfolio: viewModel.displayMode == .portfolio)
                     .padding(.top, 10)
                 
@@ -77,52 +78,60 @@ extension HomeView
         }
         .padding(.horizontal, 30)
     }
-    
-    private var coinsList: some View
-    {
-        let coins = viewModel.searchedCoins ?? viewModel.coins
-        
-        return List(coins) { coin in
-            CoinRowView(coin: coin)
-                        .listRowInsets(EdgeInsets(top: 10,
-                                                  leading: 5,
-                                                  bottom: 10,
-                                                  trailing: 15))
-        }
-        .listStyle(.plain)
-        .animation(.easeOut, value: viewModel.searchedCoins)
-    }
-    
-    private var portfolioList: some View
-    {
-        let coins = viewModel.searchedCoins ?? viewModel.holdingCoins
-        
-        return List(coins) { coin in
-            CoinRowView(coin: coin)
-                .listRowInsets(EdgeInsets(top: 10,
-                                          leading: 5,
-                                          bottom: 10,
-                                          trailing: 15))
-        }
-        .listStyle(.plain)
-        .animation(.easeOut, value: viewModel.searchedCoins)
-    }
-    
+ 
     private var coinListHeader: some View
     {
         HStack
         {
-            Text("coins")
+            HStack(spacing: 5)
+            {
+                let opacity = (viewModel.coinSortOption == .maxRank || viewModel.coinSortOption == .minRank) ? 1.0 : 0.0
+                Text("coins")
+                Image(systemName: "chevron.up")
+                    .opacity(opacity)
+                    .rotationEffect(.degrees(viewModel.coinSortOption == .minRank ? 0 : 180))
+                    .animation(.linear, value: viewModel.coinSortOption)
+            }
+            .onTapGesture {
+                viewModel.coinSortOption.toggle(.maxRank)
+            }
+            
             Spacer()
-            Text("holdings")
-                .opacity(viewModel.displayMode == .portfolio ? 1 : 0)
-                .animation(.linear, value: viewModel.displayMode)
-            Text("price")
-                .frame(maxWidth: .infinity,
-                       alignment: .trailing)
-                .containerRelativeFrame(.horizontal) { width, _ in
-                    width / 3.5
-                }
+            
+            HStack(spacing: 5)
+            {
+                let opacity = (viewModel.coinSortOption == .maxHoldings || viewModel.coinSortOption == .minHoldings) ? 1.0 : 0.0
+                Text("holdings")
+                    .animation(.linear, value: viewModel.displayMode)
+                Image(systemName: "chevron.up")
+                    .opacity(opacity)
+                    .rotationEffect(.degrees(viewModel.coinSortOption == .minHoldings ? 0 : 180))
+                    .animation(.linear, value: viewModel.coinSortOption)
+            }
+            .opacity(viewModel.displayMode == .portfolio ? 1 : 0)
+            .onTapGesture {
+                viewModel.coinSortOption.toggle(.maxHoldings)
+            }
+            
+            
+            HStack(spacing: 5)
+            {
+                let opacity = (viewModel.coinSortOption == .minPrice || viewModel.coinSortOption == .maxPrice) ? 1.0 : 0.0
+                Text("price")
+                    .frame(maxWidth: .infinity,
+                           alignment: .trailing)
+                    .containerRelativeFrame(.horizontal) { width, _ in
+                        width / 5.0
+                    }
+                Image(systemName: "chevron.up")
+                    .opacity(opacity)
+                    .rotationEffect(.degrees(viewModel.coinSortOption == .maxPrice ? 0 : 180))
+                    .animation(.linear, value: viewModel.coinSortOption)
+            }
+            .onTapGesture {
+                viewModel.coinSortOption.toggle(.maxPrice)
+            }
+//            .background(.blue)
         }
         .font(.callout)
         .foregroundStyle(Color.theme.secondaryText)
@@ -135,10 +144,10 @@ extension HomeView
         switch viewModel.displayMode
         {
         case .livePrices:
-            coinsList
+            CoinListView(coins: viewModel.searchedCoins ?? viewModel.coins)
                 .transition(.move(edge: .leading))
         case .portfolio:
-            portfolioList
+            CoinListView(coins: viewModel.searchedCoins ?? viewModel.holdingCoins)
                 .transition(.move(edge: .trailing))
         }
     }

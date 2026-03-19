@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import FactoryKit
 
+
 @Observable
 final class HomeViewModel: HomeViewModelProtocol
 {
@@ -20,6 +21,15 @@ final class HomeViewModel: HomeViewModelProtocol
     private(set) var marketStatistics: [StatisticModel] = StatisticModel.mockStatistics
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
+    
+    // MARK: - Stored properties
+    var coinSortOption: CoinSortOption = .minRank
+    {
+        didSet
+        {
+            filterCoins()
+        }
+    }
     
     var displayMode: HomeDisplayMode = .livePrices
     {
@@ -37,30 +47,13 @@ final class HomeViewModel: HomeViewModelProtocol
         }
     }
     
-    // Dependencies
+    // MARK: - Dependencies
     @ObservationIgnored
     @Injected(\.coinService) private var coinService
     @ObservationIgnored
     @Injected(\.marketDataService) private var marketDataService
-    
-    func getCoins()
-    {
-        do {
-            try coinService.fetchCoins(from: APIEndpoint.coins.url)
-        } catch {
-            print("Error getting coins: \(error.localizedDescription)")
-        }
-    }
-    
-    func getMarketStats() async
-    {
-        do {
-            try await marketDataService.fetchData(from: APIEndpoint.marketData.url)
-        } catch {
-            print("Error getting market stats: \(error.localizedDescription)")
-        }
-    }
  
+    // MARK: - stats creation
     private func makeStatistics(from data: GlobalData) -> [StatisticModel]
     {
         return [
@@ -81,6 +74,28 @@ final class HomeViewModel: HomeViewModelProtocol
     }
 }
 
+//MARK: - Data fetch
+extension HomeViewModel
+{
+    func getCoins()
+    {
+        do {
+            try coinService.fetchCoins(from: APIEndpoint.coins.url)
+        } catch {
+            print("Error getting coins: \(error.localizedDescription)")
+        }
+    }
+    
+    func getMarketStats() async
+    {
+        do {
+            try await marketDataService.fetchData(from: APIEndpoint.marketData.url)
+        } catch {
+            print("Error getting market stats: \(error.localizedDescription)")
+        }
+    }
+}
+
 //MARK: -  Subscribers
 extension HomeViewModel
 {
@@ -92,15 +107,11 @@ extension HomeViewModel
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
                 self?.coins = Array(coins.prefix(15))
-//                print("Coinsssss: \(self!.coins)")
 //                print("Successfully fetched coins: \(coins.first!.id)")
-//                coins.forEach { coin in
-//                    print("======== New coin: \(coin) \n")
-//                }
             }.store(in: &subscribers)
     }
     
-    func observe()
+    private func observe()
     {
         withObservationTracking {
             _ = marketDataService.marketData
@@ -115,10 +126,44 @@ extension HomeViewModel
             }
         }
     }
-    
 }
 
-//MARK: - Search query
+
+//MARK: - Filter coins
+extension HomeViewModel
+{
+    func filterCoins()
+    {
+        let sortCoins = displayMode == .livePrices
+
+        switch coinSortOption
+        {
+        case .maxRank:
+            sortCoins
+                ? self.coins.sort { $0.marketCapRank ?? 0 > $1.marketCapRank ?? 0 }
+                : self.holdingCoins.sort { $0.marketCapRank ?? 0 > $1.marketCapRank ?? 0 }
+        case .minRank:
+            sortCoins
+                ? self.coins.sort { $0.marketCapRank ?? 0 < $1.marketCapRank ?? 0 }
+                : self.holdingCoins.sort { $0.marketCapRank ?? 0 < $1.marketCapRank ?? 0 }
+        case .maxPrice:
+            sortCoins
+                ? self.coins.sort { $0.currentPrice > $1.currentPrice }
+                : self.holdingCoins.sort { $0.currentPrice > $1.currentPrice }
+        case .minPrice:
+            sortCoins
+                ? self.coins.sort { $0.currentPrice < $1.currentPrice }
+                : self.holdingCoins.sort { $0.currentPrice < $1.currentPrice }
+        case .maxHoldings:
+            self.holdingCoins.sort { $0.currentHoldings ?? 0 > $1.currentHoldings ?? 0 }
+        case .minHoldings:
+            self.holdingCoins.sort { $0.currentHoldings ?? 0 < $1.currentHoldings ?? 0 }
+        }
+    }
+}
+
+
+//MARK: - Search coins
 extension HomeViewModel
 {
     func debounceSearch()
