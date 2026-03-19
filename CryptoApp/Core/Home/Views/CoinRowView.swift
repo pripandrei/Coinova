@@ -59,6 +59,7 @@ extension CoinRowView
             .font(.headline)
             .fontWeight(.semibold)
             .frame(width: 30)
+            .foregroundStyle(Color.theme.secondaryText)
 //            .padding(.horizontal, 5)
     }
     

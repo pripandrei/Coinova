@@ -23,6 +23,7 @@ struct HomeStatsView: View
                         Text(statisticData.title)
                             .font(.subheadline)
                             .fontWeight(.medium)
+                            .foregroundStyle(Color.theme.secondaryText)
                         Text(statisticData.value)
                             .font(.title3)
                             .fontWeight(.semibold)

@@ -27,15 +27,9 @@ struct HomeView: View
                 SearchBarView(searchQuery: $viewModel.searchQuery)
                     .padding(.vertical, 20)
                 
-                switch viewModel.displayMode
-                {
-                case .livePrices:
-                    coinsList
-                        .transition(.move(edge: .leading))
-                case .portfolio:
-                    portfolioList
-                        .transition(.move(edge: .trailing))
-                }
+                coinListHeader
+                
+                contentList
             }
         } 
         .onAppear {
@@ -112,6 +106,41 @@ extension HomeView
         }
         .listStyle(.plain)
         .animation(.easeOut, value: viewModel.searchedCoins)
+    }
+    
+    private var coinListHeader: some View
+    {
+        HStack
+        {
+            Text("coins")
+            Spacer()
+            Text("holdings")
+                .opacity(viewModel.displayMode == .portfolio ? 1 : 0)
+                .animation(.linear, value: viewModel.displayMode)
+            Text("price")
+                .frame(maxWidth: .infinity,
+                       alignment: .trailing)
+                .containerRelativeFrame(.horizontal) { width, _ in
+                    width / 3.5
+                }
+        }
+        .font(.callout)
+        .foregroundStyle(Color.theme.secondaryText)
+        .padding(.horizontal, 20)
+    }
+    
+    @ViewBuilder
+    private var contentList: some View
+    {
+        switch viewModel.displayMode
+        {
+        case .livePrices:
+            coinsList
+                .transition(.move(edge: .leading))
+        case .portfolio:
+            portfolioList
+                .transition(.move(edge: .trailing))
+        }
     }
 }
 
