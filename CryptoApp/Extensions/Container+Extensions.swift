@@ -13,8 +13,7 @@ extension Container
     {
         Factory(self) { @MainActor in
 //            MainActor.assumeIsolated { ABC() }
-            return MockCoinService()
-//           return CoinService()
+           return CoinService()
         }.singleton
     }
     
@@ -31,8 +30,7 @@ extension Container
     var marketDataService: Factory<MarketDataServiceProtocol>
     {
         self { @MainActor in
-            MockMarketDataService()
-//            MarketDataService()
+            MarketDataService()
         }
     }
     
