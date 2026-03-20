@@ -186,16 +186,16 @@ struct MarketData: Codable
     
     var marketCapUSD: String
     {
-        return String(self.totalMarketCap["usd"] ?? 0.0)
+        return (self.totalMarketCap["usd"] ?? 0.0).abbreviated()
     }
     
     var totalVolumeUSD: String
     {
-        return String(self.totalVolume["usd"] ?? 0.0)
+        return (self.totalVolume["usd"] ?? 0.0).abbreviated()
     }
     
     var btcDominance: String
     {
-        return String(marketCapPercentage["btc"] ?? 0.0) + "%"
+        return (marketCapPercentage["btc"] ?? 0.0).abbreviated() + "%"
     }
 }

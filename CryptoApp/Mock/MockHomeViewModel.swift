@@ -6,17 +6,17 @@
 //
 
 
-#if DEBUG
-
-import Foundation
-
-protocol HomeViewModelProtocol: AnyObject {
+protocol HomeViewModelProtocol: AnyObject
+{
     var coins: [Coin] {get}
     var marketStatistics: [StatisticModel] {get}
     
     func getCoins()
     func getMarketStats() async
 }
+
+#if DEBUG
+import Foundation
 
 @Observable
 final class MockHomeViewModel: HomeViewModelProtocol

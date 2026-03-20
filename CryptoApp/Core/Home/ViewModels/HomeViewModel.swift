@@ -12,11 +12,11 @@ import FactoryKit
 
 
 @Observable
-final class HomeViewModel: HomeViewModelProtocol
+final class HomeViewModel
 {
     // TODO: remove mock data when done testing
     private(set) var coins: [Coin] = []
-    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
+    private(set) var holdingCoins: [Coin] = []
     private(set) var searchedCoins: [Coin]? 
     private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
@@ -106,7 +106,7 @@ extension HomeViewModel
         coinService.coins
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
-                self?.coins = Array(coins.prefix(15))
+                self?.coins = coins
 //                print("Successfully fetched coins: \(coins.first!.id)")
             }.store(in: &subscribers)
     }

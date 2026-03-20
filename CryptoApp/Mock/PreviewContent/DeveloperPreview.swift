@@ -8,7 +8,7 @@
 import Foundation
 
 
-#if DEBUG
+#if DEBUG || DEV
 class DeveloperPreview
 {
     static let instance = DeveloperPreview()

@@ -115,10 +115,10 @@ extension CoinRowView
     }
 }
   
-#Preview {
-    let coins = DeveloperPreview.instance.coin
-    CoinRowView(coin: coins)
-}
+//#Preview {
+//    let coins = DeveloperPreview.instance.coin
+//    CoinRowView(coin: coins)
+//}
 
 
 

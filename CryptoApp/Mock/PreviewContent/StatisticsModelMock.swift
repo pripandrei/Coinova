@@ -5,7 +5,7 @@
 //  Created by Andrei Pripa on 3/20/26.
 //
 
-
+#if DEBUG
 extension StatisticModel
 {
     static let mockStatistics: [StatisticModel] = [
@@ -21,3 +21,4 @@ extension StatisticModel
               percentageChange: -3.0)
     ]
 }
+#endif
