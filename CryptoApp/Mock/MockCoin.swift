@@ -9,6 +9,7 @@
 import Foundation
 
 //MARK: Mock data
+#if DEBUG
 extension Coin
 {
     static let mockHoldings: [Coin] = [
@@ -587,3 +588,5 @@ extension Coin
         )
     ]
 }
+#endif
+

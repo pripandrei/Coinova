@@ -15,10 +15,10 @@ import FactoryKit
 final class HomeViewModel: HomeViewModelProtocol
 {
     // TODO: remove mock data when done testing
-    private(set) var coins: [Coin] = Coin.mockCoins
+    private(set) var coins: [Coin] = []
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
     private(set) var searchedCoins: [Coin]? 
-    private(set) var marketStatistics: [StatisticModel] = StatisticModel.mockStatistics
+    private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
     

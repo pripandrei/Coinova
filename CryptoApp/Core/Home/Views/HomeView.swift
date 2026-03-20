@@ -41,8 +41,8 @@ struct HomeView: View
             }
         } 
         .onAppear {
-//            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
-//            viewModel.getCoins()
+            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
+            viewModel.getCoins()
         }
         .environment(viewModel)
     }

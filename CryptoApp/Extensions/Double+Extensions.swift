@@ -19,7 +19,7 @@ extension Double
         case 1_000_000_000_000...: return String(format: "%.2fTr", self / 1_000_000_000_000)
         case 1_000_000_000...: return String(format: "%.2fBn", self / 1_000_000_000)
         case 1_000_000...: return String(format: "%.2fM", self / 1_000_000)
-        case 1_000...: return String(format: "%.2fK",  self / 1_000)
+        case 1_000...: return String(format: "%.2fK", self / 1_000)
         default: return String(format: "%.2fK", self)
         }
     }
