@@ -37,10 +37,12 @@ enum CoinSortOption
     }
 }
 
-enum HomeDisplayMode
+enum HomeDisplayMode: Identifiable
 {
     case livePrices
     case portfolio
+    
+    var id: Self { self }
     
     var title: String
     {

@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View
 {
     @State private var viewModel: HomeViewModel = .init()
+    @State private var sheetOption: HomeSheetOption?
     
     var body: some View
     {
@@ -60,7 +61,13 @@ extension HomeView
                     InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
                 )
                 .onTapGesture {
-                    
+                    sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
+                }
+                .sheet(item: $sheetOption) { item in
+                    switch item {
+                    case .portfolio: PortfolioView()
+                    case .settings: Text("implement settings")
+                    }
                 }
             
             Spacer()
@@ -183,6 +190,19 @@ extension HomeView
         return viewModel.displayMode == .livePrices ? false : true
     }
 }
+
+//MARK: - Sheet enum
+extension HomeView
+{
+    enum HomeSheetOption: Identifiable
+    {
+        case portfolio
+        case settings
+        
+        var id: Self { self }
+    }
+}
+
 
 #Preview {
     HomeView()
