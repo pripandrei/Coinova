@@ -12,7 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		75782F0D2F632195002F0368 /* CryptoApp debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoApp debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		75782F0D2F632195002F0368 /* (debug) CryptoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "(debug) CryptoApp.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,7 +47,7 @@
 		75782F0E2F632195002F0368 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				75782F0D2F632195002F0368 /* CryptoApp debug.app */,
+				75782F0D2F632195002F0368 /* (debug) CryptoApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -76,7 +76,7 @@
 				753F73DA2F6743460012410E /* Kingfisher */,
 			);
 			productName = CryptoApp;
-			productReference = 75782F0D2F632195002F0368 /* CryptoApp debug.app */;
+			productReference = 75782F0D2F632195002F0368 /* (debug) CryptoApp.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -280,7 +280,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pripandrei.swiftui.learn.com.CryptoApp_debug;
-				PRODUCT_NAME = "$(TARGET_NAME) debug";
+				PRODUCT_NAME = "(debug) $(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -408,7 +408,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.pripandrei.swiftui.learn.com.CryptoApp_dev;
-				PRODUCT_NAME = "$(TARGET_NAME) dev";
+				PRODUCT_NAME = "(dev) $(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
