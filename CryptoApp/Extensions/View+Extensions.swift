@@ -15,4 +15,9 @@ extension View
             .keyboardType(.alphabet)
             .autocorrectionDisabled(true)
     }
-} 
+    
+    func withGlassEffectIfAvailable() -> some View
+    {
+        self.modifier(GlassEffectModifier())
+    }
+}

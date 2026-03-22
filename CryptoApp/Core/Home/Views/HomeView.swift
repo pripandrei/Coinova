@@ -81,18 +81,17 @@ extension HomeView
             
             NavigationButton(style: .icon("chevron.right"))
                 .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
-                .onTapGesture
-            {
-                withAnimation(.bouncy(duration: 0.5))
-                {
-                    self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
+                .onTapGesture {
+                    withAnimation(.bouncy(duration: 0.5))
+                    {
+                        self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
+                    }
                 }
-            }
-           
+            
         }
         .padding(.horizontal, 30)
     }
- 
+    
     private var coinListHeader: some View
     {
         HStack

@@ -19,19 +19,11 @@ struct NavigationButton: View
             .foregroundStyle(Color.theme.accent)
             .background()
             .clipShape(shape)
+            .withGlassEffectIfAvailable()
             .shadow(color: Color.theme.accent.opacity(0.2),
                     radius: 10,
                     x: 0,
                     y: 0)
-//            .onAppear {
-//                Timer.scheduledTimer(withTimeInterval: 3.0, repeats: true) { _ in
-//                    withAnimation(.linear(duration: 1.0)) {
-//                        if case .icon(let symbol) = style {
-//                            style = symbol == "info" ? .icon("plus") : .icon("info")
-//                        }
-//                    }
-//                }
-//            }
     }
 }
 
@@ -92,45 +84,3 @@ extension NavigationButton
 //.sharedBackgroundVisibility(.hidden)
 
 
-
-
-
-//
-//
-//struct NavigationButton: View
-//{
-//    enum ContentStyle: Equatable
-//    {
-//        case icon(String)
-//        case text(String)
-//    }
-//    
-//    let style: ContentStyle
-//    
-//    var body: some View {
-//        content
-//            .padding(.horizontal, 12)
-//            .padding(.vertical, 12)
-//            .background(.blue)
-//            .clipShape(clipShape)
-//    }
-//    
-//    @ViewBuilder
-//    var content: some View
-//    {
-//        switch style {
-//        case .icon(let name):
-//            Image(systemName: name)
-//        case .text(let title):
-//            Text(title)
-//        }
-//    }
-//    
-//    var clipShape: AnyShape {
-//        if case .icon = style {
-//            AnyShape(Circle())
-//        } else {
-//            AnyShape(Capsule())
-//        }
-//    }
-//}
