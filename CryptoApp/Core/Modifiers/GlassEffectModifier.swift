@@ -15,7 +15,7 @@ struct GlassEffectModifier: ViewModifier
         {
             content.glassEffect(.regular.interactive())
         } else {
-            content
+            content.modifier(PressViewModifier(scaleFactor: 1.2))
         }
     }
 }

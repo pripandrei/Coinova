@@ -19,27 +19,50 @@ struct PortfolioView: View
         {
             @Bindable var homeVM = homeVM
             
-            VStack
+            VStack(alignment: .leading)
             {
+                Text("Edit Portfolio")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding(.leading, 25)
+                    .padding(.vertical, 20)
+                
                 SearchBarView(searchQuery: $homeVM.searchQuery)
-                    .padding(.vertical, 30)
-                
-                HStack
-                {
-                    closeButton
-                        
-                }
-                
+//                    .padding(.vertical, 30)
+            
                 Spacer()
             }
-            .navigationTitle("Edit Portfolio")
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    closeButton
-                }
-                
-                ToolbarItem(placement: .topBarTrailing) {
-                    saveButton
+//            .navigationTitle("Edit Portfolio")
+            .toolbar
+            {
+                if #available(iOS 26.0, *)
+                {
+                    ToolbarItem(placement: .topBarLeading) {
+                        NavigationButton(style: .icon("xmark")) {
+                            dismiss.callAsFunction()
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationButton(style: .text("Save")) {
+                            dismiss.callAsFunction()
+                        }
+                    }
+                    .sharedBackgroundVisibility(.hidden)
+                } else {
+                    
+                    ToolbarItem(placement: .topBarLeading) {
+                        NavigationButton(style: .icon("xmark")) {
+                            dismiss.callAsFunction()
+                        }
+                    }
+                    
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationButton(style: .text("Save")) {
+                            dismiss.callAsFunction()
+                        }
+                    }
                 }
             }
         }

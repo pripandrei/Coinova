@@ -57,18 +57,21 @@ extension HomeView
         HStack
         {
             NavigationButton(style: viewModel.displayMode == .livePrices ? .icon("info") : .icon("plus"))
-                .background(
-                    InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
-                )
-                .onTapGesture {
-                    sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
+            {
+                sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
+            }
+            .background(
+                InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
+            )
+//            .onTapGesture {
+//                sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
+//            }
+            .sheet(item: $sheetOption) { item in
+                switch item {
+                case .portfolio: PortfolioView()
+                case .settings: Text("implement settings")
                 }
-                .sheet(item: $sheetOption) { item in
-                    switch item {
-                    case .portfolio: PortfolioView()
-                    case .settings: Text("implement settings")
-                    }
-                }
+            }
             
             Spacer()
             
@@ -80,14 +83,22 @@ extension HomeView
             Spacer()
             
             NavigationButton(style: .icon("chevron.right"))
-                .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
-                .onTapGesture {
-                    withAnimation(.bouncy(duration: 0.5))
-                    {
-                        self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
-                    }
+            {
+                withAnimation(.bouncy(duration: 0.5))
+                {
+                    self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
                 }
-            
+            }
+            .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
+//            .animation(.bouncy(duration: 0.5),
+//                       value: self.viewModel.displayMode)
+
+//            .onTapGesture {
+//                withAnimation(.bouncy(duration: 0.5))
+//                {
+//                    self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
+//                }
+//            }
         }
         .padding(.horizontal, 30)
     }
