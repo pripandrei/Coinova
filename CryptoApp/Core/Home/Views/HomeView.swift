@@ -56,7 +56,7 @@ extension HomeView
     {
         HStack
         {
-            NavigationButton(iconName: viewModel.displayMode == .livePrices ? "info" : "plus")
+            NavigationButton(style: viewModel.displayMode == .livePrices ? .icon("info") : .icon("plus"))
                 .background(
                     InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
                 )
@@ -79,7 +79,7 @@ extension HomeView
             
             Spacer()
             
-            NavigationButton(iconName: "chevron.right")
+            NavigationButton(style: .icon("chevron.right"))
                 .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
                 .onTapGesture
             {

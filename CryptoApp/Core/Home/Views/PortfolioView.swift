@@ -22,6 +22,15 @@ struct PortfolioView: View
             VStack
             {
                 SearchBarView(searchQuery: $homeVM.searchQuery)
+                    .padding(.vertical, 30)
+                
+                HStack
+                {
+                    closeButton
+                        
+                }
+                
+                Spacer()
             }
             .navigationTitle("Edit Portfolio")
             .toolbar {
@@ -37,27 +46,35 @@ struct PortfolioView: View
     }
 }
 
+
 //MARK: View components
 extension PortfolioView
 {
     private var closeButton: some View
     {
-        Button {
-            dismiss.callAsFunction()
-        } label: {
-            Image(systemName: "xmark")
-        }
+//            Button {
+//                dismiss.callAsFunction()
+//            } label: {
+//                Image(systemName: "xmark")
+//            }
+        Image(systemName: "xmark")
+            .onTapGesture {
+                dismiss.callAsFunction()
+            }
     }
     
     private var saveButton: some View
     {
-        Button {
-            
-            dismiss.callAsFunction()
-        } label: {
-            Text("Save")
-        }
-
+//        Button {
+//            
+//            dismiss.callAsFunction()
+//        } label: {
+//            Text("Save")
+//        }
+        Text("Save")
+            .onTapGesture {
+                dismiss.callAsFunction()
+            }
     }
 }
 
