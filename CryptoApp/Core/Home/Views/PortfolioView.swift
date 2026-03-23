@@ -15,6 +15,7 @@ struct PortfolioView: View
     @Environment(\.dismiss) var dismiss
     
     @State private var selectedCoin: Coin?
+    @State private var holdingAmount: Double?
     
     var body: some View
     {
@@ -57,6 +58,8 @@ struct PortfolioView: View
                 .scrollClipDisabled()
 //                .background(.blue.opacity(0.3))
                 .padding(.top, 40)
+                
+                portfolioInputSection
                 
                 Spacer()
             }
@@ -109,14 +112,65 @@ extension PortfolioView
                 .strokeBorder(.green,
                               style: StrokeStyle(lineWidth: 2.0))
                 .opacity(selectedCoin == coin ? 1.0 : 0.0)
-                .animation(.spring(duration: 0.5), value: selectedCoin)
+                .animation(.spring(duration: 0.4), value: selectedCoin)
         }
         .onTapGesture {
             self.selectedCoin = coin
         }
     }
     
-    // ToolBar
+    private var portfolioInputSection: some View
+    {
+        VStack(spacing: 20)
+        {
+            HStack {
+                Text("Current price of \(selectedCoin?.symbol.uppercased() ?? ""): ")
+                Spacer()
+                Text("\(selectedCoin?.currentPrice.asCurrenyWithDecimals() ?? "0.00")")
+            }
+            
+            Divider()
+            
+            HStack {
+                Text("Amount holding: ")
+                Spacer()
+                TextField("Ex: 1.7",
+                          value: $holdingAmount,
+                          formatter: Double.amountFormatter)
+                .frame(maxWidth: 150)
+                .fixedSize()
+                .multilineTextAlignment(.trailing)
+                .keyboardType(.decimalPad)
+            }
+            
+            Divider()
+            
+            HStack {
+                Text("Current value: ")
+                Spacer()
+//                Text("\(selectedCoin?.currentHoldingsValues.asCurrenyWithDecimals() ?? "0.00")")
+                Text("\(getCurrentValue().asCurrenyWithDecimals())")
+            }
+        }
+        .foregroundStyle(Color.theme.accent)
+        .font(.headline)
+        .fontWeight(.medium)
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        .onChange(of: selectedCoin) { oldValue, newValue in
+            self.holdingAmount = newValue?.currentHoldings
+        }
+    }
+    
+    private func getCurrentValue() -> Double
+    {
+        return (selectedCoin?.currentPrice ?? 0.0) * (self.holdingAmount ?? 0.0)
+    }
+}
+
+//MARK: ToolBar
+extension PortfolioView
+{
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent
     {
@@ -151,7 +205,6 @@ extension PortfolioView
         }
     }
 }
-
 
 #Preview {
     let vm = HomeViewModel()

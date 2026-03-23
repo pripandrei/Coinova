@@ -34,6 +34,12 @@ extension Double
         return formatter
     }()
     
+    static let amountFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        return formatter
+    }()
+    
     func asCurrenyWithDecimals() -> String
     {
         return Self.currencyFormatter.string(from: (self as NSNumber)) ?? "\(self)"
