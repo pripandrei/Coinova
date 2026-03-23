@@ -30,40 +30,10 @@ struct PortfolioView: View
                 {
                     VStack(alignment: .leading)
                     {
-                        //                Text("Edit Portfolio")
-                        //                    .font(.largeTitle)
-                        //                    .fontWeight(.bold)
-                        //                    .foregroundStyle(Color.theme.accent)
-                        //                    .padding(.leading, 25)
-                        //                    .padding(.vertical, 10)
-                        
                         SearchBarView(searchQuery: $homeVM.searchQuery)
                             .padding(.top, 25)
                         
-                        ScrollView(.horizontal, showsIndicators: false)
-                        {
-                            LazyHStack(spacing: 0)
-                            {
-                                ForEach(homeVM.searchedCoins ?? homeVM.holdingCoins) { coin in
-                                    coinCell(coin)
-                                        .containerRelativeFrame(.horizontal,
-                                                                count: 4,
-                                                                spacing: 0,
-                                                                alignment: .center)
-                                }
-                            }
-                            .frame(height: 120)
-                            .scrollTargetLayout()
-                        }
-                        .contentMargins(.horizontal,
-                                        20,
-                                        for: .scrollContent)
-                        //                .contentMargins(.vertical, 20, for: .scrollContent)
-                        //                .contentMargins(-15, for: .scrollIndicators)
-                        .scrollTargetBehavior(.viewAligned)
-                        .scrollClipDisabled()
-                        //                .background(.blue.opacity(0.3))
-                        .padding(.top, 25)
+                        coinsScrollList
                         
                         if selectedCoin != nil
                         {
@@ -88,6 +58,32 @@ struct PortfolioView: View
 //MARK: View components
 extension PortfolioView
 {
+    private var coinsScrollList: some View
+    {
+        ScrollView(.horizontal, showsIndicators: false)
+        {
+            LazyHStack(spacing: 0)
+            {
+                ForEach(homeVM.searchedCoins ?? homeVM.holdingCoins) { coin in
+                    coinCell(coin)
+                        .containerRelativeFrame(.horizontal,
+                                                count: 4,
+                                                spacing: 0,
+                                                alignment: .center)
+                }
+            }
+            .frame(height: 120)
+            .scrollTargetLayout()
+        }
+        .contentMargins(.horizontal,
+                        20,
+                        for: .scrollContent)
+        .scrollTargetBehavior(.viewAligned)
+        .scrollClipDisabled()
+        .padding(.top, 25)
+
+    }
+    
     private func coinCell(_ coin: Coin) -> some View
     {
         VStack(spacing: 10)
@@ -115,7 +111,6 @@ extension PortfolioView
                     .foregroundStyle(Color.theme.secondaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
-                    
             }
             .frame(maxWidth: 90)
             .frame(maxHeight: 50)
@@ -133,7 +128,6 @@ extension PortfolioView
         }
     }
     
-//    private var portfolioInputSection: some View
     private func portfolioInputSection(_ proxy: ScrollViewProxy) -> some View
     {
         VStack(spacing: 20)
