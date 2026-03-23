@@ -16,8 +16,8 @@ final class HomeViewModel
 {
     // TODO: remove mock data when done testing
     private(set) var coins: [Coin] = []
-    private(set) var holdingCoins: [Coin] = []
-    private(set) var searchedCoins: [Coin]? 
+    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
+    private(set) var searchedCoins: [Coin]?
     private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
@@ -188,9 +188,9 @@ extension HomeViewModel
         
         let q = query.lowercased()
         
-        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins
+//        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins
         
-        self.searchedCoins = coins
+        self.searchedCoins = self.coins
             .filter { $0.id.lowercased().contains(q) || $0.symbol.lowercased().contains(q) }
             .sorted { a, b in
                 let aName = a.name.lowercased()
