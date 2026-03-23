@@ -24,15 +24,14 @@ struct PortfolioView: View
                 Text("Edit Portfolio")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundStyle(Color.theme.accent)
                     .padding(.leading, 25)
                     .padding(.vertical, 20)
                 
                 SearchBarView(searchQuery: $homeVM.searchQuery)
-//                    .padding(.vertical, 30)
             
                 Spacer()
             }
-//            .navigationTitle("Edit Portfolio")
             .toolbar
             {
                 if #available(iOS 26.0, *)
@@ -73,32 +72,7 @@ struct PortfolioView: View
 //MARK: View components
 extension PortfolioView
 {
-    private var closeButton: some View
-    {
-//            Button {
-//                dismiss.callAsFunction()
-//            } label: {
-//                Image(systemName: "xmark")
-//            }
-        Image(systemName: "xmark")
-            .onTapGesture {
-                dismiss.callAsFunction()
-            }
-    }
     
-    private var saveButton: some View
-    {
-//        Button {
-//            
-//            dismiss.callAsFunction()
-//        } label: {
-//            Text("Save")
-//        }
-        Text("Save")
-            .onTapGesture {
-                dismiss.callAsFunction()
-            }
-    }
 }
 
 

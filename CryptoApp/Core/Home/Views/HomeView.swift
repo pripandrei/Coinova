@@ -63,9 +63,6 @@ extension HomeView
             .background(
                 InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
             )
-//            .onTapGesture {
-//                sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
-//            }
             .sheet(item: $sheetOption) { item in
                 switch item {
                 case .portfolio: PortfolioView()
@@ -90,15 +87,6 @@ extension HomeView
                 }
             }
             .rotationEffect(.degrees(viewModel.displayMode == .livePrices ? 0 : 180))
-//            .animation(.bouncy(duration: 0.5),
-//                       value: self.viewModel.displayMode)
-
-//            .onTapGesture {
-//                withAnimation(.bouncy(duration: 0.5))
-//                {
-//                    self.viewModel.displayMode = viewModel.displayMode == .livePrices ? .portfolio : .livePrices
-//                }
-//            }
         }
         .padding(.horizontal, 30)
     }
@@ -216,6 +204,5 @@ extension HomeView
 
 #Preview {
     HomeView()
-//    NavigationButton(iconName: "info")
 }
 

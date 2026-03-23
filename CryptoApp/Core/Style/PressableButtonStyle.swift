@@ -18,7 +18,6 @@ struct PressableButtonStyle: ButtonStyle
         configuration.label
 //            .opacity(isPressed ? 0.8 : 1.0)
             .scaleEffect(isPressed ? scaleFactor : 1.0)
-//            .animation(.spring(duration: 0.3),
             .animation(.bouncy(duration: 0.3, extraBounce: 0.3),
                        value: isPressed)
     }

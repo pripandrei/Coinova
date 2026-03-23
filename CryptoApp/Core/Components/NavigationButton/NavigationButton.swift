@@ -29,29 +29,6 @@ struct NavigationButton: View
                         y: 0)
         }
         .withPressableStyle()
-        
-        
-//        content
-//            .font(.headline)
-//            .foregroundStyle(Color.theme.accent)
-//            .background()
-//            .clipShape(shape)
-//            .withGlassEffectIfAvailable()
-////            .withPressableScale()
-//            .shadow(color: Color.theme.accent.opacity(0.2),
-//                    radius: 10,
-//                    x: 0,
-//                    y: 0)
-////            .pressEffectIfUnavailable()
-////            .modifier(PressViewModifier(scaleFactor: 1.4))
-////            .applyIf(!isIOS26Available) { $0.modifier(PressViewModifier(scaleFactor: 1.4))
-////            }
-//            .onTapGesture {
-//                action()
-////                rotate = true
-//            }
-////            .withPressableScale()
-////            .withGlassEffectIfAvailable()
     }
 }
 
@@ -95,7 +72,6 @@ extension NavigationButton
 }
 
 #Preview {
-//    NavigationButton(style: .text("pluss type"))
     NavigationButton(style: .icon("plus")) {}
 }
 
