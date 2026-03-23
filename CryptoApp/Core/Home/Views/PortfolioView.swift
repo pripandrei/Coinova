@@ -17,54 +17,68 @@ struct PortfolioView: View
     @State private var selectedCoin: Coin?
     @State private var holdingAmount: Double?
     
+    @FocusState private var isFocused: Bool
+    
     var body: some View
     {
         NavigationStack
         {
             @Bindable var homeVM = homeVM
             
-            VStack(alignment: .leading)
-            {
-                Text("Edit Portfolio")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundStyle(Color.theme.accent)
-                    .padding(.leading, 25)
-                    .padding(.vertical, 20)
-                
-                SearchBarView(searchQuery: $homeVM.searchQuery)
-                
-                ScrollView(.horizontal, showsIndicators: false)
+            ScrollViewReader { proxy in
+                ScrollView
                 {
-                    LazyHStack(spacing: 0)
+                    VStack(alignment: .leading)
                     {
-                        ForEach(homeVM.searchedCoins ?? homeVM.holdingCoins) { coin in
-                            coinCell(coin)
-                                .containerRelativeFrame(.horizontal,
-                                                        count: 4,
-                                                        spacing: 0,
-                                                        alignment: .center)
+                        //                Text("Edit Portfolio")
+                        //                    .font(.largeTitle)
+                        //                    .fontWeight(.bold)
+                        //                    .foregroundStyle(Color.theme.accent)
+                        //                    .padding(.leading, 25)
+                        //                    .padding(.vertical, 10)
+                        
+                        SearchBarView(searchQuery: $homeVM.searchQuery)
+                            .padding(.top, 25)
+                        
+                        ScrollView(.horizontal, showsIndicators: false)
+                        {
+                            LazyHStack(spacing: 0)
+                            {
+                                ForEach(homeVM.searchedCoins ?? homeVM.holdingCoins) { coin in
+                                    coinCell(coin)
+                                        .containerRelativeFrame(.horizontal,
+                                                                count: 4,
+                                                                spacing: 0,
+                                                                alignment: .center)
+                                }
+                            }
+                            .frame(height: 120)
+                            .scrollTargetLayout()
                         }
+                        .contentMargins(.horizontal,
+                                        20,
+                                        for: .scrollContent)
+                        //                .contentMargins(.vertical, 20, for: .scrollContent)
+                        //                .contentMargins(-15, for: .scrollIndicators)
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollClipDisabled()
+                        //                .background(.blue.opacity(0.3))
+                        .padding(.top, 25)
+                        
+                        if selectedCoin != nil
+                        {
+                            portfolioInputSection(proxy)
+                                .padding(.top, 10)
+                        }
+                        
+                        Spacer()
                     }
-                    .frame(height: 120)
-                    .scrollTargetLayout()
+                    .navigationTitle("Edit Portfolio")
+                    .toolbar {
+                        toolbarContent
+                    }
                 }
-                .contentMargins(.horizontal,
-                                20,
-                                for: .scrollContent)
-//                .contentMargins(.vertical, 20, for: .scrollContent)
-//                .contentMargins(-15, for: .scrollIndicators)
-                .scrollTargetBehavior(.viewAligned)
-                .scrollClipDisabled()
-//                .background(.blue.opacity(0.3))
-                .padding(.top, 40)
-                
-                portfolioInputSection
-                
-                Spacer()
-            }
-            .toolbar {
-                toolbarContent
+                .scrollDisabled(true)
             }
         }
     }
@@ -119,7 +133,8 @@ extension PortfolioView
         }
     }
     
-    private var portfolioInputSection: some View
+//    private var portfolioInputSection: some View
+    private func portfolioInputSection(_ proxy: ScrollViewProxy) -> some View
     {
         VStack(spacing: 20)
         {
@@ -141,6 +156,20 @@ extension PortfolioView
                 .fixedSize()
                 .multilineTextAlignment(.trailing)
                 .keyboardType(.decimalPad)
+                .focused($isFocused)
+                .onChange(of: isFocused) { _, isFocused in
+                    if isFocused
+                    {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
+                        {
+                            withAnimation(.linear(duration: 0.2))
+                            {
+                                proxy.scrollTo("visibleOnKeyboardUp",
+                                               anchor: .bottom)
+                            }
+                        }
+                    }
+                }
             }
             
             Divider()
@@ -148,9 +177,12 @@ extension PortfolioView
             HStack {
                 Text("Current value: ")
                 Spacer()
-//                Text("\(selectedCoin?.currentHoldingsValues.asCurrenyWithDecimals() ?? "0.00")")
                 Text("\(getCurrentValue().asCurrenyWithDecimals())")
             }
+            
+            Text("Invisible placeholder for scroll on keyboard up")
+                .opacity(0)
+                .id("visibleOnKeyboardUp")
         }
         .foregroundStyle(Color.theme.accent)
         .font(.headline)
@@ -160,6 +192,7 @@ extension PortfolioView
         .onChange(of: selectedCoin) { oldValue, newValue in
             self.holdingAmount = newValue?.currentHoldings
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
     private func getCurrentValue() -> Double
