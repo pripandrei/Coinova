@@ -70,9 +70,9 @@ struct Coin: Identifiable, Codable
     let atlChangePercentage: Double?
     let atlDate: String?
     let lastUpdated: String?
-    let sparklineIn7d: SparklineIn7d?
     let priceChangePercentage24hInCurrency: Double?
     let currentHoldings: Double?
+    let sparklineIn7d: SparklineIn7d?
 
     enum CodingKeys: String, CodingKey
     {

@@ -13,25 +13,25 @@ extension Container
     {
         Factory(self) { @MainActor in
 //            MainActor.assumeIsolated { ABC() }
-           return CoinService()
-        }.singleton
+            return CoinService()
+        }.shared
     }
     
     var imageService: Factory<ImageDownloadable>
     {
-        self { @MainActor in ImageLoader() }
+        self { @MainActor in ImageLoader() }.shared
     }
     
     var cacheService: Factory<DataCacheable>
     {
-        self { @MainActor in CacheService() }
+        self { @MainActor in CacheService() }.cached
     }
     
     var marketDataService: Factory<MarketDataServiceProtocol>
     {
         self { @MainActor in
             MarketDataService()
-        }
+        }.shared
     }
     
 }
