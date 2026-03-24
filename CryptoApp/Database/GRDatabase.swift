@@ -14,17 +14,20 @@ final class GRDBDatabase
     
     init() throws
     {
-        let url = FileManager.default
-            .urls(for: .applicationSupportDirectory,
-                  in: .userDomainMask)
-            .first!
-            .appending(path: "cryptoApp.db.sqlite")
-        
-        self.dbQueue = try DatabaseQueue(path: url.path())
+        let url = try FileManager.default
+            .url(for: .applicationSupportDirectory,
+                 in: .userDomainMask,
+                 appropriateFor: nil,
+                 create: true)
+            .appending(component: "cryptoApp.db.sqlite")
+
+        self.dbQueue = try DatabaseQueue(path: url.path(percentEncoded: false))
         
         try migrate()
         
+        #if DEBUG || DEV
         print("📂 DB PATH: \(url.path())")
+        #endif
     }
     
     private func migrate() throws
@@ -32,12 +35,11 @@ final class GRDBDatabase
         var migrator = DatabaseMigrator()
         
         migrator.registerMigration("v1") { db in
-            try db.create(table: "coin", ifNotExists: true) { t in
+            try db.create(table: Coin.databaseTableName, ifNotExists: true) { t in
                 t.primaryKey("id", .text).notNull()
                 t.column("symbol", .text).notNull()
                 t.column("name", .text).notNull()
                 t.column("image", .text).notNull()
-                t.column("current_price", .double).notNull()
                 t.column("current_price", .double).notNull()
                 t.column("market_cap", .double)
                 t.column("market_cap_rank", .integer)
@@ -66,5 +68,15 @@ final class GRDBDatabase
         }
         
         try migrator.migrate(dbQueue)
+    }
+}
+
+extension GRDBDatabase
+{
+    func save<T: PersistableRecord>(_ object: T) throws
+    {
+        try dbQueue.write { db in
+            try object.save(db)
+        }
     }
 }

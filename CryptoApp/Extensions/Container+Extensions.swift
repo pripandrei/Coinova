@@ -34,13 +34,13 @@ extension Container
         }.shared
     }
     
-    var localDatabase: Factory<GRDBDatabase> // create protocol
+    var localDatabase: Factory<GRDBDatabase>
     {
         self { @MainActor in
             do {
                 return try GRDBDatabase()
             } catch {
-                fatalError("Failed to create database: \(error)")
+                fatalError("Failed to initialize database: \(error)")
             }
         }.cached
     }

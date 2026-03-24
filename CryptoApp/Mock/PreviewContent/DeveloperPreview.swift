@@ -41,16 +41,16 @@ class DeveloperPreview
         atlChangePercentage: 99_400.5,
         atlDate: "2013-07-06T00:00:00.000Z",
         lastUpdated: "2024-11-01T12:00:00.000Z",
-        sparklineIn7d: SparklineIn7d(price: [62000, 63500, 65000, 64200, 66100, 67000, 67432]),
         priceChangePercentage24hInCurrency: 0.94,
-        currentHoldings: 3.5
+        currentHoldings: 3.5,
+        sparklineIn7d: SparklineIn7d(price: [62000, 63500, 65000, 64200, 66100, 67000, 67432]),
     )
     
-    func makeMockHomeViewModel() -> MockHomeViewModel
-    {
-        let homeViewModelMock: MockHomeViewModel = .init()
-        return homeViewModelMock
-    }
+//    func makeMockHomeViewModel() -> MockHomeViewModel
+//    {
+//        let homeViewModelMock: MockHomeViewModel = .init()
+//        return homeViewModelMock
+//    }
 }
 #endif
 

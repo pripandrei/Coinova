@@ -49,6 +49,9 @@ final class HomeViewModel
     
     // MARK: - Dependencies
     @ObservationIgnored
+    @Injected(\.localDatabase) private var database
+    
+    @ObservationIgnored
     @Injected(\.coinService) private var coinService
     @ObservationIgnored
     @Injected(\.marketDataService) private var marketDataService

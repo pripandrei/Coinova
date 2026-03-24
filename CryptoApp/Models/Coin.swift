@@ -42,9 +42,12 @@
 //  }
 
 import Foundation
+import GRDB
 
-struct Coin: Identifiable, Codable
+struct Coin: Identifiable, Codable, FetchableRecord, PersistableRecord
 {
+    static let databaseTableName: String = "coin"
+    
     let id: String
     let symbol: String
     let name: String
@@ -100,7 +103,7 @@ struct Coin: Identifiable, Codable
         case lastUpdated                        = "last_updated"
         case sparklineIn7d                      = "sparkline_in_7d"
         case priceChangePercentage24hInCurrency = "price_change_percentage_24h_in_currency"
-        case currentHoldings
+        case currentHoldings                    = "current_holdings"
     }
     
     var currentHoldingsValues: Double
