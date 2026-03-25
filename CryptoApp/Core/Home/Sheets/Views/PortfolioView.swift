@@ -11,14 +11,12 @@ import SwiftUI
 struct PortfolioView: View
 {
     @State private var viewModel: PortfolioViewModel
-    @Environment(\.dismiss) var dismiss
-    
-    @State private var selectedCoin: Coin?
-//    @State private var holdingAmount: Double?
+    @State private var scrollProxy: ScrollViewProxy?
     
     @FocusState private var isHoldingAmountFocused: Bool
     @FocusState private var isSearchFocused: Bool
-    @State private var scrollProxy: ScrollViewProxy?
+    
+    @Environment(\.dismiss) var dismiss
     
     init(_ coins: [Coin])
     {
@@ -38,7 +36,7 @@ struct PortfolioView: View
                         
                         coinsScrollList
                         
-                        if selectedCoin != nil
+                        if viewModel.selectedCoin != nil
                         {
                             portfolioInputSection
                                 .padding(.top, 10)
@@ -55,7 +53,7 @@ struct PortfolioView: View
                 .onAppear {
                     self.scrollProxy = proxy
                 }
-                .onChange(of: selectedCoin) { _, newValue in
+                .onChange(of: viewModel.selectedCoin) { _, newValue in
 //                    self.holdingAmount = newValue?.currentHoldings
                     self.viewModel.updateHoldingAmount(newValue?.currentHoldings)
                 }
@@ -74,9 +72,9 @@ extension PortfolioView
         SearchBarView(searchQuery: $viewModel.searchQuery)
             .padding(.top, 25)
             .onChange(of: viewModel.searchQuery) { _, newValue in
-                if let selectedCoin, newValue.isEmpty, !viewModel.holdingCoins.contains(selectedCoin)
+                if let selectedCoin = viewModel.selectedCoin, newValue.isEmpty, !viewModel.holdingCoins.contains(selectedCoin)
                 {
-                    self.selectedCoin = nil
+                    viewModel.updateSelectedCoin(nil)
                 }
             }
             .focused($isSearchFocused)
@@ -97,7 +95,7 @@ extension PortfolioView
             {
                 ForEach(viewModel.mergedCoins) { coin in
                     PortfolioCoinCellView(coin: coin,
-                                          isSelected: selectedCoin?.id == coin.id)
+                                          isSelected: viewModel.selectedCoin?.id == coin.id)
                     .onTapGesture {
                         self.selectCoin(coin)
                     }
@@ -125,9 +123,9 @@ extension PortfolioView
         VStack(spacing: 20)
         {
             HStack {
-                Text("Current price of \(selectedCoin?.symbol.uppercased() ?? ""): ")
+                Text("Current price of \(viewModel.selectedCoin?.symbol.uppercased() ?? ""): ")
                 Spacer()
-                Text("\(selectedCoin?.currentPrice.asCurrenyWithDecimals() ?? "0.00")")
+                Text("\(viewModel.selectedCoin?.currentPrice.asCurrenyWithDecimals() ?? "0.00")")
             }
             
             Divider()
@@ -136,7 +134,7 @@ extension PortfolioView
                 Text("Amount holding: ")
                 Spacer()
                 TextField("Ex: 1.7",
-                          value: $viewModel.holdingAmount,
+                          value: $viewModel.selectedCoinHoldings,
                           formatter: Double.amountFormatter)
                 .frame(maxWidth: 150)
                 .fixedSize()
@@ -156,7 +154,7 @@ extension PortfolioView
             HStack {
                 Text("Current value: ")
                 Spacer()
-                Text("\(getCurrentValue().asCurrenyWithDecimals())")
+                Text("\(viewModel.getCurrentHoldingsValue().asCurrenyWithDecimals())")
             }
             
             Text("Invisible placeholder for scroll on keyboard up")
@@ -223,7 +221,7 @@ extension PortfolioView
     
     private func onSave()
     {
-        self.selectedCoin = nil
+        viewModel.updateSelectedCoin(nil)
         viewModel.searchQuery = ""
         UIApplication.shared.endEditing()
     }
@@ -234,11 +232,6 @@ extension PortfolioView
 extension PortfolioView
 {
     static let itemVisibilityID: String = "visibleOnKeyboardUp"
-    
-    private func getCurrentValue() -> Double
-    {
-        return (selectedCoin?.currentPrice ?? 0.0) * (self.viewModel.holdingAmount ?? 0.0)
-    }
     
     private func scrollToView()
     {
@@ -254,13 +247,13 @@ extension PortfolioView
     
     private func selectCoin(_ coin: Coin)
     {
-        self.selectedCoin = coin
+        viewModel.updateSelectedCoin(coin)
         scrollToView()
     }
     
     private var showPortfolioInputSection: Bool
     {
-        guard let selectedCoin else { return false }
+        guard let selectedCoin = viewModel.selectedCoin else { return false }
         
         let isHolding = viewModel.holdingCoins.contains(selectedCoin)
         let hasResults = viewModel.searchService.searchedCoins?.isEmpty == false

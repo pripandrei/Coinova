@@ -13,9 +13,9 @@ final class PortfolioViewModel
 {
     var coins: [Coin]
     var holdingCoins: [Coin] = Coin.mockHoldings
+    var selectedCoinHoldings: Double?
     
-//    private(set) var selectedCoin: Coin?
-    var holdingAmount: Double?
+    private(set) var selectedCoin: Coin?
     
     //MARK: - Dependencies
     
@@ -55,18 +55,28 @@ final class PortfolioViewModel
         searchQuery = ""
         searchService.reset()
     }
+    
+    func updateSelectedCoin(_ value: Coin?)
+    {
+        selectedCoin = value
+    }
+    
+    func getCurrentHoldingsValue() -> Double
+    {
+        return (selectedCoin?.currentPrice ?? 0.0) * (selectedCoinHoldings ?? 0.0)
+    }
 }
 
 //MARK: - holdings save
 extension PortfolioViewModel
 {
-    func saveHoldings(_ coin: Coin)
+    func saveHoldings()
     {
-        let updatedCoin = coin.updateHoldings(<#T##value: Double##Double#>)
+//        let updatedCoin = selectedCoin?.updateHoldings(<#T##value: Double##Double#>)
     }
     
     func updateHoldingAmount(_ value: Double?)
     {
-        holdingAmount = value
+        selectedCoinHoldings = value
     }
 }
