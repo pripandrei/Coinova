@@ -13,8 +13,8 @@ final class PortfolioViewModel
 {
     var coins: [Coin]
     var holdingCoins: [Coin] = Coin.mockHoldings
-    var selectedCoinHoldings: Double?
     
+    private var selectedCoinHoldings: Double?
     private(set) var selectedCoin: Coin?
     
     //MARK: - Dependencies
@@ -38,6 +38,16 @@ final class PortfolioViewModel
         }
     }
     
+    var selectedCoinHoldingsAbsoluteValue: Double
+    {
+        get {
+            selectedCoinHoldings ?? 0.0
+        }
+        set {
+            selectedCoinHoldings = abs(newValue)
+        }
+    }
+    
     var mergedCoins: [Coin]
     {
         guard let searchedCoins = searchService.searchedCoins else
@@ -50,6 +60,8 @@ final class PortfolioViewModel
         }
     }
     
+    
+    //MARK: - internal functions
     func resetSearch()
     {
         searchQuery = ""
@@ -72,7 +84,10 @@ extension PortfolioViewModel
 {
     func saveHoldings()
     {
-//        let updatedCoin = selectedCoin?.updateHoldings(<#T##value: Double##Double#>)
+        guard let selectedCoinHoldings,
+              let updatedCoin = selectedCoin?.updateHoldings(selectedCoinHoldings) else {return}
+        
+        localDatabase.save(updatedCoin)
     }
     
     func updateHoldingAmount(_ value: Double?)
@@ -80,3 +95,4 @@ extension PortfolioViewModel
         selectedCoinHoldings = value
     }
 }
+

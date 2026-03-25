@@ -159,7 +159,7 @@ extension Coin
             atlDate: atlDate,
             lastUpdated: lastUpdated,
             priceChangePercentage24hInCurrency: priceChangePercentage24hInCurrency,
-            currentHoldings: (currentHoldings ?? 0.0) + value,
+            currentHoldings: value,
             sparklineIn7d: sparklineIn7d
         )
     }

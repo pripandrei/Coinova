@@ -73,10 +73,14 @@ final class GRDBDatabase
 
 extension GRDBDatabase
 {
-    func save<T: PersistableRecord>(_ object: T) throws
+    func save<T: PersistableRecord>(_ object: T)
     {
-        try dbQueue.write { db in
-            try object.save(db)
+        do {
+            try dbQueue.write { db in
+                try object.save(db)
+            }
+        } catch {
+            print("📂 Error while saving object to database: \(error)")
         }
     }
 }

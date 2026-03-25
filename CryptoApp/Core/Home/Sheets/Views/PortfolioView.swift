@@ -134,7 +134,7 @@ extension PortfolioView
                 Text("Amount holding: ")
                 Spacer()
                 TextField("Ex: 1.7",
-                          value: $viewModel.selectedCoinHoldings,
+                          value: $viewModel.selectedCoinHoldingsAbsoluteValue,
                           formatter: Double.amountFormatter)
                 .frame(maxWidth: 150)
                 .fixedSize()
@@ -223,6 +223,7 @@ extension PortfolioView
     {
         viewModel.updateSelectedCoin(nil)
         viewModel.searchQuery = ""
+        viewModel.saveHoldings()
         UIApplication.shared.endEditing()
     }
 }
