@@ -19,6 +19,9 @@ final class PortfolioViewModel
     @ObservationIgnored
     @Injected(\.searchCoinService) private(set) var searchService
     
+    @ObservationIgnored
+    @Injected(\.localDatabase) private var localDatabase
+    
     //MARK: - init
     init(coins: [Coin]) {
         self.coins = coins
@@ -50,3 +53,5 @@ final class PortfolioViewModel
         searchService.reset()
     }
 }
+
+
