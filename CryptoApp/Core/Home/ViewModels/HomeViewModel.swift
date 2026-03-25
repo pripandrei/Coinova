@@ -191,9 +191,9 @@ extension HomeViewModel
         
         let q = query.lowercased()
         
-//        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins
+        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins // TODO: - fix searching for portfolio sheet
         
-        self.searchedCoins = self.coins
+        self.searchedCoins = coins
             .filter { $0.id.lowercased().contains(q) || $0.symbol.lowercased().contains(q) }
             .sorted { a, b in
                 let aName = a.name.lowercased()
@@ -209,6 +209,12 @@ extension HomeViewModel
                 
                 return aName < bName
             }
+    }
+    
+    func resetSearch()
+    {
+        searchedCoins = nil
+        searchQuery = ""
     }
 }
 

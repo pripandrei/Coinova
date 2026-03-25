@@ -59,6 +59,7 @@ extension HomeView
             NavigationButton(style: viewModel.displayMode == .livePrices ? .icon("info") : .icon("plus"))
             {
                 sheetOption = viewModel.displayMode == .livePrices ? .settings : .portfolio
+                Task { viewModel.resetSearch() }
             }
             .background(
                 InfoButtonAnimation(animationInitiated: shouldAnimateInfoButton())
