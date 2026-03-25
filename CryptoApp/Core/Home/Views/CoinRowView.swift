@@ -58,9 +58,8 @@ extension CoinRowView
         Text("\(coin.marketCapRank ?? 0)")
             .font(.headline)
             .fontWeight(.semibold)
-            .frame(width: 30)
+            .frame(width: 35)
             .foregroundStyle(Color.theme.secondaryText)
-//            .padding(.horizontal, 5)
     }
     
     private var symbol: some View

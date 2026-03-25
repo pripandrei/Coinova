@@ -12,7 +12,7 @@ import FactoryKit
 final class PortfolioViewModel
 {
     var coins: [Coin]
-    var holdingCoins: [Coin] = []
+    var holdingCoins: [Coin] = Coin.mockHoldings
     
     //MARK: - Dependencies
     
