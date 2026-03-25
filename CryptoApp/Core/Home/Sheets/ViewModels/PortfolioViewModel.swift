@@ -43,4 +43,10 @@ final class PortfolioViewModel
             holdingCoins.first(where: { $0.id == coin.id }) ?? coin
         }
     }
+    
+    func resetSearch()
+    {
+        searchQuery = ""
+        searchService.reset()
+    }
 }

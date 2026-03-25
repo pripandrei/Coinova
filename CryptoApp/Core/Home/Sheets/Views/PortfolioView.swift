@@ -211,8 +211,13 @@ extension PortfolioView
     
     private func onClose()
     {
-        dismiss.callAsFunction()
-        UIApplication.shared.endEditing()
+        viewModel.resetSearch()
+        Task // task is used just for delay purposes
+        {
+            try await Task.sleep(for: .milliseconds(100))
+            UIApplication.shared.endEditing()
+            dismiss.callAsFunction()
+        }
     }
     
     private func onSave()
@@ -249,10 +254,7 @@ extension PortfolioView
     private func selectCoin(_ coin: Coin)
     {
         self.selectedCoin = coin
-        if let scrollProxy
-        {
-            scrollToView()
-        }
+        scrollToView()
     }
     
     private var showPortfolioInputSection: Bool
