@@ -17,7 +17,6 @@ final class HomeViewModel
     // TODO: remove mock data when done testing
     private(set) var coins: [Coin] = []
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
-    private(set) var searchedCoins: [Coin]?
     private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
@@ -35,7 +34,7 @@ final class HomeViewModel
     {
         didSet
         {
-            if !searchQuery.isEmpty { debounceSearch() }
+            if !searchQuery.isEmpty { searchForCoins() }
         }
     }
     
@@ -43,16 +42,21 @@ final class HomeViewModel
     {
         didSet {
             guard oldValue != searchQuery else {return}
-            debounceSearch()
+            searchForCoins()
         }
     }
     
     // MARK: - Dependencies
+    
+    @ObservationIgnored
+    @Injected(\.searchCoinService) private(set) var searchService
+    
     @ObservationIgnored
     @Injected(\.localDatabase) private var database
     
     @ObservationIgnored
     @Injected(\.coinService) private var coinService
+    
     @ObservationIgnored
     @Injected(\.marketDataService) private var marketDataService
  
@@ -165,56 +169,18 @@ extension HomeViewModel
     }
 }
 
-
-//MARK: - Search coins
+//MARK: Search coins
 extension HomeViewModel
 {
-    func debounceSearch()
+    private func searchForCoins()
     {
-        searchTask?.cancel()
-        
-        searchTask = Task {
-            try? await Task.sleep(for: .milliseconds(300))
-            guard !Task.isCancelled else {return}
-            
-            searchCoins(query: self.searchQuery)
-        }
-    }
-    
-    private func searchCoins(query: String)
-    {
-        guard !query.isEmpty else
-        {
-            self.searchedCoins = nil
-            return
-        }
-        
-        let q = query.lowercased()
-        
-        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins // TODO: - fix searching for portfolio sheet
-        
-        self.searchedCoins = coins
-            .filter { $0.id.lowercased().contains(q) || $0.symbol.lowercased().contains(q) }
-            .sorted { a, b in
-                let aName = a.name.lowercased()
-                let bName = b.name.lowercased()
-                
-                let aIsPrefix = aName.hasPrefix(q)
-                let bIsPrefix = bName.hasPrefix(q)
-                
-                if aIsPrefix != bIsPrefix
-                {
-                    return aIsPrefix
-                }
-                
-                return aName < bName
-            }
+        let coins = displayMode == .livePrices ? self.coins : self.holdingCoins
+        searchService.search(searchQuery: self.searchQuery, coins)
     }
     
     func resetSearch()
     {
-        searchedCoins = nil
         searchQuery = ""
+        searchService.reset()
     }
 }
-

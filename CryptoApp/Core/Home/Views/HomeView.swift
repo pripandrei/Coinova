@@ -34,7 +34,7 @@ struct HomeView: View
                 ZStack
                 {
                     contentList
-                    if viewModel.searchedCoins?.isEmpty == true
+                    if viewModel.searchService.searchedCoins?.isEmpty == true
                     {
                         noCoinDataView
                     }
@@ -157,10 +157,10 @@ extension HomeView
         switch viewModel.displayMode
         {
         case .livePrices:
-            CoinListView(coins: viewModel.searchedCoins ?? viewModel.coins)
+            CoinListView(coins: viewModel.searchService.searchedCoins ?? viewModel.coins)
                 .transition(.move(edge: .leading))
         case .portfolio:
-            CoinListView(coins: viewModel.searchedCoins ?? viewModel.holdingCoins)
+            CoinListView(coins: viewModel.searchService.searchedCoins ?? viewModel.holdingCoins)
                 .transition(.move(edge: .trailing))
         }
     }

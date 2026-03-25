@@ -45,4 +45,10 @@ extension Container
         }.cached
     }
     
+    var searchCoinService: Factory<CoinSearchable>
+    {
+        self { @MainActor in
+            SearchCoinService()
+        }.shared
+    }
 }

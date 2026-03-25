@@ -64,7 +64,7 @@ extension PortfolioView
         {
             LazyHStack(spacing: 0)
             {
-                ForEach(homeVM.searchedCoins ?? homeVM.holdingCoins) { coin in
+                ForEach(homeVM.searchService.searchedCoins ?? homeVM.holdingCoins) { coin in
                     coinCell(coin)
                         .containerRelativeFrame(.horizontal,
                                                 count: 4,
