@@ -17,7 +17,7 @@ struct PortfolioView: View
     @State private var selectedCoin: Coin?
     @State private var holdingAmount: Double?
     
-    @FocusState private var isFocused: Bool
+    @FocusState private var isHoldingAmountFocused: Bool
     @FocusState private var isSearchFocused: Bool
     @State private var scrollProxy: ScrollViewProxy?
     
@@ -156,7 +156,7 @@ extension PortfolioView
             RoundedRectangle(cornerRadius: 15)
                 .strokeBorder(.green,
                               style: StrokeStyle(lineWidth: 2.0))
-                .opacity(selectedCoin == coin ? 1.0 : 0.0)
+                .opacity(selectedCoin?.id == coin.id ? 1.0 : 0.0)
                 .animation(.spring(duration: 0.4), value: selectedCoin)
         }
         .onTapGesture {
@@ -191,8 +191,8 @@ extension PortfolioView
                 .fixedSize()
                 .multilineTextAlignment(.trailing)
                 .keyboardType(.decimalPad)
-                .focused($isFocused)
-                .onChange(of: isFocused) { _, isFocused in
+                .focused($isHoldingAmountFocused)
+                .onChange(of: isHoldingAmountFocused) { _, isFocused in
                     if isFocused
                     {
                         self.scrollToView(proxy)
