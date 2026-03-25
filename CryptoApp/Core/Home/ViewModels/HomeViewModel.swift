@@ -15,13 +15,14 @@ import FactoryKit
 final class HomeViewModel
 {
     // TODO: remove mock data when done testing
+    // MARK: - Stored properties
     private(set) var coins: [Coin] = []
     private(set) var holdingCoins: [Coin] = Coin.mockHoldings
     private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
     
-    // MARK: - Stored properties
+    // MARK: - computed properties
     var coinSortOption: CoinSortOption = .minRank
     {
         didSet

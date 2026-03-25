@@ -66,7 +66,7 @@ extension HomeView
             )
             .sheet(item: $sheetOption) { item in
                 switch item {
-                case .portfolio: PortfolioView()
+                case .portfolio: PortfolioView(viewModel.coins)
                 case .settings: Text("implement settings")
                 }
             }

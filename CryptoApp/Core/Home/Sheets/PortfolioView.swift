@@ -11,7 +11,7 @@ import Kingfisher
 
 struct PortfolioView: View
 {
-    @Environment(HomeViewModel.self) var homeVM
+    @State private var viewModel: PortfolioViewModel
     @Environment(\.dismiss) var dismiss
     
     @State private var selectedCoin: Coin?
@@ -19,18 +19,21 @@ struct PortfolioView: View
     
     @FocusState private var isFocused: Bool
     
+    init(_ coins: [Coin])
+    {
+        self._viewModel = State(wrappedValue: PortfolioViewModel(coins: coins))
+    }
+    
     var body: some View
     {
         NavigationStack
         {
-            @Bindable var homeVM = homeVM
-            
             ScrollViewReader { proxy in
                 ScrollView
                 {
                     VStack(alignment: .leading)
                     {
-                        SearchBarView(searchQuery: $homeVM.searchQuery)
+                        SearchBarView(searchQuery: $viewModel.searchQuery)
                             .padding(.top, 25)
                         
                         coinsScrollList
@@ -64,7 +67,7 @@ extension PortfolioView
         {
             LazyHStack(spacing: 0)
             {
-                ForEach(homeVM.searchService.searchedCoins ?? homeVM.holdingCoins) { coin in
+                ForEach(viewModel.searchService.searchedCoins ?? viewModel.holdingCoins) { coin in
                     coinCell(coin)
                         .containerRelativeFrame(.horizontal,
                                                 count: 4,
@@ -235,6 +238,6 @@ extension PortfolioView
 
 #Preview {
     let vm = HomeViewModel()
-    return PortfolioView()
+    PortfolioView(vm.coins)
         .environment(vm)
 }
