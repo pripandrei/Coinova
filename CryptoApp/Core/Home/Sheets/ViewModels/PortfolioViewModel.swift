@@ -14,6 +14,9 @@ final class PortfolioViewModel
     var coins: [Coin]
     var holdingCoins: [Coin] = Coin.mockHoldings
     
+//    private(set) var selectedCoin: Coin?
+    var holdingAmount: Double?
+    
     //MARK: - Dependencies
     
     @ObservationIgnored
@@ -54,4 +57,16 @@ final class PortfolioViewModel
     }
 }
 
-
+//MARK: - holdings save
+extension PortfolioViewModel
+{
+    func saveHoldings(_ coin: Coin)
+    {
+        let updatedCoin = coin.updateHoldings(<#T##value: Double##Double#>)
+    }
+    
+    func updateHoldingAmount(_ value: Double?)
+    {
+        holdingAmount = value
+    }
+}

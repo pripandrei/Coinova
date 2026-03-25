@@ -14,7 +14,7 @@ struct PortfolioView: View
     @Environment(\.dismiss) var dismiss
     
     @State private var selectedCoin: Coin?
-    @State private var holdingAmount: Double?
+//    @State private var holdingAmount: Double?
     
     @FocusState private var isHoldingAmountFocused: Bool
     @FocusState private var isSearchFocused: Bool
@@ -55,8 +55,9 @@ struct PortfolioView: View
                 .onAppear {
                     self.scrollProxy = proxy
                 }
-                .onChange(of: selectedCoin) { oldValue, newValue in
-                    self.holdingAmount = newValue?.currentHoldings
+                .onChange(of: selectedCoin) { _, newValue in
+//                    self.holdingAmount = newValue?.currentHoldings
+                    self.viewModel.updateHoldingAmount(newValue?.currentHoldings)
                 }
             }
         }
@@ -135,7 +136,7 @@ extension PortfolioView
                 Text("Amount holding: ")
                 Spacer()
                 TextField("Ex: 1.7",
-                          value: $holdingAmount,
+                          value: $viewModel.holdingAmount,
                           formatter: Double.amountFormatter)
                 .frame(maxWidth: 150)
                 .fixedSize()
@@ -236,7 +237,7 @@ extension PortfolioView
     
     private func getCurrentValue() -> Double
     {
-        return (selectedCoin?.currentPrice ?? 0.0) * (self.holdingAmount ?? 0.0)
+        return (selectedCoin?.currentPrice ?? 0.0) * (self.viewModel.holdingAmount ?? 0.0)
     }
     
     private func scrollToView()
