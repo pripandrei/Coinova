@@ -7,7 +7,6 @@
 
 
 import SwiftUI
-import Kingfisher
 
 struct PortfolioView: View
 {
@@ -41,7 +40,7 @@ struct PortfolioView: View
                         
                         if selectedCoin != nil
                         {
-                            portfolioInputSection(proxy)
+                            portfolioInputSection
                                 .padding(.top, 10)
                         }
                         
@@ -81,9 +80,9 @@ extension PortfolioView
             }
             .focused($isSearchFocused)
             .onChange(of: isSearchFocused, { _, newValue in
-                if newValue, let scrollProxy
+                if newValue
                 {
-                    scrollToView(scrollProxy)
+                    scrollToView()
                 }
             })
     }
@@ -95,12 +94,16 @@ extension PortfolioView
         {
             LazyHStack(spacing: 0)
             {
-                ForEach(viewModel.searchService.searchedCoins ?? viewModel.holdingCoins) { coin in
-                    coinCell(coin)
-                        .containerRelativeFrame(.horizontal,
-                                                count: 4,
-                                                spacing: 0,
-                                                alignment: .center)
+                ForEach(viewModel.mergedCoins) { coin in
+                    PortfolioCoinCellView(coin: coin,
+                                          isSelected: selectedCoin?.id == coin.id)
+                    .onTapGesture {
+                        self.selectCoin(coin)
+                    }
+                    .containerRelativeFrame(.horizontal,
+                                            count: 4,
+                                            spacing: 0,
+                                            alignment: .center)
                 }
             }
             .frame(height: 120)
@@ -114,62 +117,9 @@ extension PortfolioView
         .padding(.top, 25)
 
     }
-    
-    // coin cell
-    private func coinCell(_ coin: Coin) -> some View
-    {
-        VStack(spacing: 10)
-        {
-            KFImage(URL(string: coin.image))
-                .memoryCacheExpiration(.expired)
-                .cancelOnDisappear(true)
-                .placeholder({
-                    ProgressView()
-                        .frame(width: 30, height: 30)
-                })
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
-            
-            VStack(spacing: 2)
-            {
-                Text(coin.symbol)
-                    .font(.headline)
-                    .fontWeight(.bold)
-                    .textCase(.uppercase)
-                    .foregroundStyle(Color.theme.accent)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-                
-                Text(coin.name.capitalized)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(Color.theme.secondaryText)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
-            .frame(maxWidth: 90)
-            .frame(maxHeight: 50)
-        }
-        .padding(5)
-        .background {
-            RoundedRectangle(cornerRadius: 15)
-                .strokeBorder(.green,
-                              style: StrokeStyle(lineWidth: 2.0))
-                .opacity(selectedCoin?.id == coin.id ? 1.0 : 0.0)
-                .animation(.spring(duration: 0.4), value: selectedCoin)
-        }
-        .onTapGesture {
-            self.selectedCoin = coin
-            if let scrollProxy
-            {
-                scrollToView(scrollProxy)
-            }
-        }
-    }
-    
+
     // portfolio section
-    private func portfolioInputSection(_ proxy: ScrollViewProxy) -> some View
+    private var portfolioInputSection: some View
     {
         VStack(spacing: 20)
         {
@@ -195,7 +145,7 @@ extension PortfolioView
                 .onChange(of: isHoldingAmountFocused) { _, isFocused in
                     if isFocused
                     {
-                        self.scrollToView(proxy)
+                        self.scrollToView()
                     }
                 }
             }
@@ -284,15 +234,24 @@ extension PortfolioView
         return (selectedCoin?.currentPrice ?? 0.0) * (self.holdingAmount ?? 0.0)
     }
     
-    private func scrollToView(_ proxy: ScrollViewProxy)
+    private func scrollToView()
     {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1)
         {
             withAnimation(.spring(duration: 0.4, bounce: 0.3, blendDuration: 0.9))
             {
-                proxy.scrollTo(Self.itemVisibilityID,
-                               anchor: .bottom)
+                self.scrollProxy?.scrollTo(Self.itemVisibilityID,
+                                           anchor: .bottom)
             }
+        }
+    }
+    
+    private func selectCoin(_ coin: Coin)
+    {
+        self.selectedCoin = coin
+        if let scrollProxy
+        {
+            scrollToView()
         }
     }
     

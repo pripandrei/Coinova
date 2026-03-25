@@ -31,4 +31,16 @@ final class PortfolioViewModel
             searchService.search(searchQuery: searchQuery, coins)
         }
     }
+    
+    var mergedCoins: [Coin]
+    {
+        guard let searchedCoins = searchService.searchedCoins else
+        {
+            return holdingCoins
+        }
+        
+        return searchedCoins.map { coin in
+            holdingCoins.first(where: { $0.id == coin.id }) ?? coin
+        }
+    }
 }
