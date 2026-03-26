@@ -221,9 +221,9 @@ extension PortfolioView
     
     private func onSave()
     {
+        viewModel.saveHoldings()
         viewModel.updateSelectedCoin(nil)
         viewModel.searchQuery = ""
-        viewModel.saveHoldings()
         UIApplication.shared.endEditing()
     }
 }

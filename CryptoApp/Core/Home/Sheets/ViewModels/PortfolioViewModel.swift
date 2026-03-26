@@ -12,7 +12,8 @@ import FactoryKit
 final class PortfolioViewModel
 {
     var coins: [Coin]
-    var holdingCoins: [Coin] = Coin.mockHoldings
+//    var holdingCoins: [Coin] = Coin.mockHoldings
+    var holdingCoins: [Coin] = []
     
     private var selectedCoinHoldings: Double?
     private(set) var selectedCoin: Coin?
@@ -88,6 +89,12 @@ extension PortfolioViewModel
               let updatedCoin = selectedCoin?.updateHoldings(selectedCoinHoldings) else {return}
         
         localDatabase.save(updatedCoin)
+        
+        if let index = holdingCoins.firstIndex(where: { $0.id == updatedCoin.id })
+        {
+            holdingCoins.remove(at: index)
+        }
+        holdingCoins.append(updatedCoin)
     }
     
     func updateHoldingAmount(_ value: Double?)
