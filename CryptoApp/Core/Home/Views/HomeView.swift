@@ -40,10 +40,14 @@ struct HomeView: View
                     }
                 }
             }
-        } 
-        .onAppear {
-            viewModel.setupSubscribers() // TODO: move subscribers to VM after navigation implementation
-            viewModel.getCoins()
+        }
+        .task {
+            if viewModel.subscribers.isEmpty
+            {
+                viewModel.setupSubscribers()
+                viewModel.retrieveHoldingCoins()
+                viewModel.getCoins()
+            }
         }
         .environment(viewModel)
     }

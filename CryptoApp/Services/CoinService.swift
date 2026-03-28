@@ -7,10 +7,12 @@
 
 import Combine
 import Foundation
+import FactoryKit
 
 protocol CointServiceProtocol
 {
     var coins: CurrentValueSubject<[Coin], Never> { get }
+    var holdingCoins: CurrentValueSubject<[Coin], Never> { get }
     func fetchCoins(from url: String) throws
 }
 
@@ -18,7 +20,14 @@ protocol CointServiceProtocol
 final class CoinService: CointServiceProtocol
 {
     private(set) var coins: CurrentValueSubject<[Coin], Never> = .init([])
+    private(set) var holdingCoins: CurrentValueSubject<[Coin], Never> = .init([])
     private var subscribers: Set<AnyCancellable> = []
+    
+    @Injected(\.localDatabase) private var db
+    
+    init() {
+       observeHoldingCoins()
+    }
     
     func fetchCoins(from url: String) throws
     {
@@ -37,6 +46,16 @@ final class CoinService: CointServiceProtocol
             } receiveValue: { [weak self] coins in
                 self?.coins.send(coins)
             }.store(in: &subscribers)
+    }
+    
+    func observeHoldingCoins()
+    {
+        db.observe(type: Coin.self,
+                   filter: Coin.currentHoldingsFilter)
+        .sink { NetworkingManager.handleCompletion(completion: $0) }
+        receiveValue: { holdingCoins in
+            self.holdingCoins.send(holdingCoins)
+        }.store(in: &subscribers)
     }
 }
 

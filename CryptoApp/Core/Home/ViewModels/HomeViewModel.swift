@@ -14,14 +14,11 @@ import FactoryKit
 @Observable
 final class HomeViewModel
 {
-    // TODO: remove mock data when done testing
     // MARK: - Stored properties
     private(set) var coins: [Coin] = []
-//    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
     private(set) var holdingCoins: [Coin] = []
     private(set) var marketStatistics: [StatisticModel] = []
-    private var subscribers: Set<AnyCancellable> = []
-    private var searchTask: Task<Void, Never>?
+    private(set) var subscribers: Set<AnyCancellable> = []
     
     // MARK: - computed properties
     var coinSortOption: CoinSortOption = .minRank
@@ -110,24 +107,31 @@ extension HomeViewModel
 {
     func setupSubscribers()
     {
-        observe()
+        /// data market
+        observeMarketData()
         
+        /// all coins
         coinService.coins
             .filter { !$0.isEmpty }
             .sink { [weak self] coins in
                 self?.coins = coins
 //                print("Successfully fetched coins: \(coins.first!.id)")
             }.store(in: &subscribers)
+        
+        /// holdings
+        coinService.holdingCoins.sink { holdings in
+            self.holdingCoins = holdings
+        }.store(in: &subscribers)
     }
     
-    private func observe()
+    private func observeMarketData()
     {
         withObservationTracking {
             _ = marketDataService.marketData
         } onChange: {
             Task { @MainActor in
                 defer {
-                    self.observe()
+                    self.observeMarketData()
                 }
                 guard let marketData = self.marketDataService.marketData else {return}
                 
@@ -184,5 +188,20 @@ extension HomeViewModel
     {
         searchQuery = ""
         searchService.reset()
+    }
+}
+
+//MARK: retrieve db coins
+extension HomeViewModel
+{
+    func retrieveHoldingCoins()
+    {
+        do {
+            let holdings = try database.fetch(type: Coin.self,
+                                              filter: Coin.currentHoldingsFilter)
+            self.holdingCoins = holdings
+        } catch {
+            print("🚨 - Error retrieving holdings from DB: \(error.localizedDescription)")
+        }
     }
 }

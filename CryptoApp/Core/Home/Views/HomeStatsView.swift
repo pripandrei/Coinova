@@ -47,8 +47,6 @@ struct HomeStatsView: View
         } 
         .frame(height: 70)
         .task {
-            // TODO: - uncomment when done testing-
-//            homeVM.observe()
             await homeVM.getMarketStats()
         }
 //        .background(.blue)

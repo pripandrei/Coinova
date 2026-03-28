@@ -7,6 +7,7 @@
 
 import Foundation
 import GRDB
+import Combine
 
 typealias DBColumn = Column
 
@@ -75,6 +76,7 @@ final class GRDBDatabase
 
 extension GRDBDatabase
 {
+    // save data
     func save<T: PersistableRecord>(_ object: T)
     {
         do {
@@ -86,6 +88,7 @@ extension GRDBDatabase
         }
     }
     
+    // fetch data
     func fetch<T: FetchableRecord & PersistableRecord>(type: T.Type,
                                                        filter: SQLExpression? = nil) throws -> [T]
     {
@@ -104,7 +107,25 @@ extension GRDBDatabase
         }
     }
     
-//    
+    // observe data
+    
+    
+    func observe<T: FetchableRecord & PersistableRecord>(type: T.Type,
+                                                         filter: SQLExpression? = nil) -> AnyPublisher<[T], Error>
+    {
+        let observation = ValueObservation.tracking { db in
+            if let filter {
+                return try T.filter(filter).fetchAll(db)
+            }
+            return try T.fetchAll(db)
+        }
+        
+        return observation
+            .publisher(in: dbQueue)
+            .eraseToAnyPublisher()
+    }
+    
+//
 //    func retrieveObjects<T: FetchableRecord & TableRecord>(ofType type: T.Type,
 //                                                           filter: String? = nil,
 //                                                           arguments: [Any] = []) throws -> [T]
