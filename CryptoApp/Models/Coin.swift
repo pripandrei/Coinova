@@ -8,40 +8,41 @@
 // API : https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h
 
 
-
-// JSON DATA:
-//{
-//    "id": "bitcoin",
-//    "symbol": "btc",
-//    "name": "Bitcoin",
-//    "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
-//    "current_price": 70599,
-//    "market_cap": 1411261512921,
-//    "market_cap_rank": 1,
-//    "fully_diluted_valuation": 1411261512921,
-//    "total_volume": 35787731553,
-//    "high_24h": 72105,
-//    "low_24h": 70417,
-//    "price_change_24h": -1431.18993402796,
-//    "price_change_percentage_24h": -1.98693,
-//    "market_cap_change_24h": -32942885830.178,
-//    "market_cap_change_percentage_24h": -2.28104,
-//    "circulating_supply": 20002003,
-//    "total_supply": 20002003,
-//    "max_supply": 21000000,
-//    "ath": 126080,
-//    "ath_change_percentage": -44.00461,
-//    "ath_date": "2025-10-06T18:57:42.558Z",
-//    "atl": 67.81,
-//    "atl_change_percentage": 104014.38172,
-//    "atl_date": "2013-07-06T00:00:00.000Z",
-//    "roi": null,
-//    "last_updated": "2026-03-14T15:54:52.900Z",
-//    "sparkline_in_7d": {
-//      "price": [67991.1035699002, 67916.103289176, 68019.1601918745, 67899.1508484934, 67801.0163226986 ...]
-//    },
-//    "price_change_percentage_24h_in_currency": -1.98693284435742
-//  }
+//MARK: - JSON DATA
+/*
+{
+    "id": "bitcoin",
+    "symbol": "btc",
+    "name": "Bitcoin",
+    "image": "https://coin-images.coingecko.com/coins/images/1/large/bitcoin.png?1696501400",
+    "current_price": 70599,
+    "market_cap": 1411261512921,
+    "market_cap_rank": 1,
+    "fully_diluted_valuation": 1411261512921,
+    "total_volume": 35787731553,
+    "high_24h": 72105,
+    "low_24h": 70417,
+    "price_change_24h": -1431.18993402796,
+    "price_change_percentage_24h": -1.98693,
+    "market_cap_change_24h": -32942885830.178,
+    "market_cap_change_percentage_24h": -2.28104,
+    "circulating_supply": 20002003,
+    "total_supply": 20002003,
+    "max_supply": 21000000,
+    "ath": 126080,
+    "ath_change_percentage": -44.00461,
+    "ath_date": "2025-10-06T18:57:42.558Z",
+    "atl": 67.81,
+    "atl_change_percentage": 104014.38172,
+    "atl_date": "2013-07-06T00:00:00.000Z",
+    "roi": null,
+    "last_updated": "2026-03-14T15:54:52.900Z",
+    "sparkline_in_7d": {
+      "price": [67991.1035699002, 67916.103289176, 68019.1601918745, 67899.1508484934, 67801.0163226986 ...]
+    },
+    "price_change_percentage_24h_in_currency": -1.98693284435742
+  }
+ */
 
 import Foundation
 import GRDB
@@ -114,11 +115,13 @@ struct Coin: Identifiable, Codable, FetchableRecord, PersistableRecord
     }
 }
 
+//MARK: - Sparkline in 7d
 struct SparklineIn7d: Codable
 {
     let price: [Double]
 }
 
+//MARK: - equatable
 extension Coin: Equatable
 {
     static func == (lhs: Coin, rhs: Coin) -> Bool
@@ -165,8 +168,35 @@ extension Coin
     }
 }
 
+
+//MARK: - Coin filters
+
 extension Coin
 {
+    static var currentHoldingsFilter: SQLExpression
+    {
+        return CodingKeys.currentHoldings.column > 0
+    }
+
+    // exmample
+//    static var topRank: SQLExpression
+//    {
+//        return Column(CodingKeys.marketCapRank) <= 86
+//    }
+}
+
+
+extension CodingKey
+{
+    var column: Column
+    {
+        Column(self)
+    }
+}
+
+//MARK: - Columns
+//extension Coin
+//{
 //    enum Columns: String, ColumnExpression
 //    {
 //        case id, symbol, name, image
@@ -194,152 +224,11 @@ extension Coin
 //        case sparklineIn7d                      = "sparkline_in_7d"
 //        case priceChangePercentage24hInCurrency = "price_change_percentage_24h_in_currency"
 //        case currentHoldings                    = "current_holdings"
-//        
-//        var name: String { rawValue }
-//    }
-}
-
-
-extension Coin
-{
-    enum Columns {
-        static let rank = Column("market_cap_rank")
-    }
-    
-    static var holdColumn: DBColumn
-    {
-        return DBColumn(CodingKeys.currentHoldings)
-    }
-    
-//    func test()
-//    {
-//        let request: QueryInterfaceRequest<Coin> = Coin.filter(Coin.Columns.marketCapRank < 50)
 //    }
     
-    static func getHoldingCoins() -> QueryInterfaceRequest<Coin>
-    {
-        return Coin.filter(Column("currentHoldings") > 0)
-    }
-    
-//    static var currentHoldingsFilter: QueryInterfaceRequest<Coin>
-//    {
-//        return Coin.filter(Column("currentHoldings") > 0)
-//    }
-    
-    static var currentHoldingsFilter: SQLExpression
-    {
-        return Column(CodingKeys.currentHoldings) > 0
-    }
-    
-    static var test:  QueryInterfaceRequest<Coin>
-    {
-        return Self.filter(Column(CodingKeys.currentHoldings) > 0).filter(Column(CodingKeys.currentHoldings) > 0)
-    }
-    
-    static var testHoldings: QueryInterfaceRequest<Coin>
-    {
-        return Self.filter(Column(CodingKeys.currentHoldings) > 0.0)
-    }
-    
-    static var testRank: QueryInterfaceRequest<Coin>
-    {
-        return Self.filter(Column(CodingKeys.marketCapRank) <= 10)
-    }
-    
-    
-    static var topRank: SQLExpression {
-        // example
-        return Column(CodingKeys.marketCapRank) <= 86
-    }
-    
-    static var topRank2: Filter {
-        // example
-        return Filter(expression: Column(CodingKeys.marketCapRank) <= 200)
-    }
-    
-    static var _currentHoldingsFilter: Filter
-    {
-        return Filter(expression: Column(CodingKeys.currentHoldings) > 0)
-    }
-    
-    
-    static func colum(_ value: String) -> Column
-    {
-        Column(value)
-    }
-    
-    static func argument(_ value: [Any]) -> StatementArguments
-    {
-        return StatementArguments(value) ?? StatementArguments()
-    }
-}
-
-
-//extension Coin
-//{
-//    struct Filter
-//    {
-//        // Internal GRDB expression, hidden from outside
-//        let expression: SQLExpression
-//        
-//        // Predefined filters
-//        static var hasHoldings: Filter {
-//            Filter(expression: Column(CodingKeys.currentHoldings) > 0)
-//        }
-//        
-//        static var topRanked: Filter {
-//            Filter(expression: Column(CodingKeys.marketCapRank) <= 50)
-//        }
-//        
-//        static var isFavorite: Filter {
-//            Filter(expression: Column(CodingKeys.atl) == true)
-//        }
-//        
-//        // Combinators - ViewModel uses these, no GRDB knowledge needed
-//        func and(_ other: Filter) -> Filter {
-//            Filter(expression: expression && other.expression)
-//        }
-//        
-//        func or(_ other: Filter) -> Filter {
-//            Filter(expression: expression || other.expression)
-//        }
-//        
-//        func not() -> Filter {
-//            Filter(expression: !expression)
-//        }
+//    static var topRank: SQLExpression {
+//        // example
+//        return CodingKeys.marketCapRank <= 86
 //    }
 //}
 
-
-
-struct GRDBFilter
-{
-    enum CoinFilter
-    {
-        static var currentHoldingsFilter: SQLExpression
-        {
-            return Column(Coin.CodingKeys.currentHoldings) > 0
-        }
-    }
-}
-
-extension QueryInterfaceRequest
-{
-    func and(_ value: Self) -> Self
-    {
-        return value.filter(value)
-    }
-}
-
-extension SQLExpression
-{
-    func and(_ value: Self) -> Self
-    {
-        return value && self
-    }
-    
-    func or(_ value: Self) -> Self
-    {
-        return value || self
-    }
-}

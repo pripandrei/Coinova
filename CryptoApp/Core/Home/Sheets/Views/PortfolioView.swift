@@ -53,8 +53,11 @@ struct PortfolioView: View
                 .onAppear {
                     self.scrollProxy = proxy
                 }
+                .task {
+                    guard viewModel.holdingCoins.isEmpty else {return}
+                    viewModel.retrieveHoldingCoins()
+                }
                 .onChange(of: viewModel.selectedCoin) { _, newValue in
-//                    self.holdingAmount = newValue?.currentHoldings
                     self.viewModel.updateHoldingAmount(newValue?.currentHoldings)
                 }
             }

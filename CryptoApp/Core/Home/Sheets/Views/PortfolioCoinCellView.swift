@@ -12,7 +12,7 @@ struct PortfolioCoinCellView: View
 {
     let coin: Coin
     let isSelected: Bool
-    
+
     var body: some View
     {
         VStack(spacing: 10)
