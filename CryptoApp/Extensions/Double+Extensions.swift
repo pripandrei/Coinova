@@ -15,7 +15,7 @@ extension Double
         
         switch abs
         {
-        case 1_000_000_000_000...: return String(format: "%.2fQd", self / 1_000_000_000_000_000)
+        case 1_000_000_000_000_000...: return String(format: "%.2fQd", self / 1_000_000_000_000_000)
         case 1_000_000_000_000...: return String(format: "%.2fTr", self / 1_000_000_000_000)
         case 1_000_000_000...: return String(format: "%.2fBn", self / 1_000_000_000)
         case 1_000_000...: return String(format: "%.2fM", self / 1_000_000)
@@ -29,7 +29,7 @@ extension Double
         formatter.numberStyle = .currency
         formatter.locale = Locale(identifier: "en_US")
         formatter.minimumFractionDigits = 2
-        formatter.maximumFractionDigits = 10
+        formatter.maximumFractionDigits = 8
         
         return formatter
     }()
