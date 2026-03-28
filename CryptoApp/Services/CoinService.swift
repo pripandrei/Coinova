@@ -16,7 +16,7 @@ protocol CointServiceProtocol
     func fetchCoins(from url: String) throws
 }
 
-//@Observable
+
 final class CoinService: CointServiceProtocol
 {
     private(set) var coins: CurrentValueSubject<[Coin], Never> = .init([])
@@ -48,7 +48,7 @@ final class CoinService: CointServiceProtocol
             }.store(in: &subscribers)
     }
     
-    func observeHoldingCoins()
+    private func observeHoldingCoins()
     {
         db.observe(type: Coin.self,
                    filter: Coin.currentHoldingsFilter)

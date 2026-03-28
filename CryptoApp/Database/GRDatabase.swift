@@ -108,8 +108,6 @@ extension GRDBDatabase
     }
     
     // observe data
-    
-    
     func observe<T: FetchableRecord & PersistableRecord>(type: T.Type,
                                                          filter: SQLExpression? = nil) -> AnyPublisher<[T], Error>
     {

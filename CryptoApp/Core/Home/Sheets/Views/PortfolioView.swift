@@ -40,6 +40,7 @@ struct PortfolioView: View
                         {
                             portfolioInputSection
                                 .padding(.top, 10)
+                                .transition(.opacity.animation(.bouncy(duration: 0.5)))
                         }
                         
                         Spacer()
