@@ -164,3 +164,182 @@ extension Coin
         )
     }
 }
+
+extension Coin
+{
+//    enum Columns: String, ColumnExpression
+//    {
+//        case id, symbol, name, image
+//        case currentPrice                       = "current_price"
+//        case marketCap                          = "market_cap"
+//        case marketCapRank                      = "market_cap_rank"
+//        case fullyDilutedValuation              = "fully_diluted_valuation"
+//        case totalVolume                        = "total_volume"
+//        case high24h                            = "high_24h"
+//        case low24h                             = "low_24h"
+//        case priceChange24h                     = "price_change_24h"
+//        case priceChangePercentage24h           = "price_change_percentage_24h"
+//        case marketCapChange24h                 = "market_cap_change_24h"
+//        case marketCapChangePercentage24h       = "market_cap_change_percentage_24h"
+//        case circulatingSupply                  = "circulating_supply"
+//        case totalSupply                        = "total_supply"
+//        case maxSupply                          = "max_supply"
+//        case ath
+//        case athChangePercentage                = "ath_change_percentage"
+//        case athDate                            = "ath_date"
+//        case atl
+//        case atlChangePercentage                = "atl_change_percentage"
+//        case atlDate                            = "atl_date"
+//        case lastUpdated                        = "last_updated"
+//        case sparklineIn7d                      = "sparkline_in_7d"
+//        case priceChangePercentage24hInCurrency = "price_change_percentage_24h_in_currency"
+//        case currentHoldings                    = "current_holdings"
+//        
+//        var name: String { rawValue }
+//    }
+}
+
+
+extension Coin
+{
+    enum Columns {
+        static let rank = Column("market_cap_rank")
+    }
+    
+    static var holdColumn: DBColumn
+    {
+        return DBColumn(CodingKeys.currentHoldings)
+    }
+    
+//    func test()
+//    {
+//        let request: QueryInterfaceRequest<Coin> = Coin.filter(Coin.Columns.marketCapRank < 50)
+//    }
+    
+    static func getHoldingCoins() -> QueryInterfaceRequest<Coin>
+    {
+        return Coin.filter(Column("currentHoldings") > 0)
+    }
+    
+//    static var currentHoldingsFilter: QueryInterfaceRequest<Coin>
+//    {
+//        return Coin.filter(Column("currentHoldings") > 0)
+//    }
+    
+    static var currentHoldingsFilter: SQLExpression
+    {
+        return Column(CodingKeys.currentHoldings) > 0
+    }
+    
+    static var test:  QueryInterfaceRequest<Coin>
+    {
+        return Self.filter(Column(CodingKeys.currentHoldings) > 0).filter(Column(CodingKeys.currentHoldings) > 0)
+    }
+    
+    static var testHoldings: QueryInterfaceRequest<Coin>
+    {
+        return Self.filter(Column(CodingKeys.currentHoldings) > 0.0)
+    }
+    
+    static var testRank: QueryInterfaceRequest<Coin>
+    {
+        return Self.filter(Column(CodingKeys.marketCapRank) <= 10)
+    }
+    
+    
+    static var topRank: SQLExpression {
+        // example
+        return Column(CodingKeys.marketCapRank) <= 86
+    }
+    
+    static var topRank2: Filter {
+        // example
+        return Filter(expression: Column(CodingKeys.marketCapRank) <= 200)
+    }
+    
+    static var _currentHoldingsFilter: Filter
+    {
+        return Filter(expression: Column(CodingKeys.currentHoldings) > 0)
+    }
+    
+    
+    static func colum(_ value: String) -> Column
+    {
+        Column(value)
+    }
+    
+    static func argument(_ value: [Any]) -> StatementArguments
+    {
+        return StatementArguments(value) ?? StatementArguments()
+    }
+}
+
+
+//extension Coin
+//{
+//    struct Filter
+//    {
+//        // Internal GRDB expression, hidden from outside
+//        let expression: SQLExpression
+//        
+//        // Predefined filters
+//        static var hasHoldings: Filter {
+//            Filter(expression: Column(CodingKeys.currentHoldings) > 0)
+//        }
+//        
+//        static var topRanked: Filter {
+//            Filter(expression: Column(CodingKeys.marketCapRank) <= 50)
+//        }
+//        
+//        static var isFavorite: Filter {
+//            Filter(expression: Column(CodingKeys.atl) == true)
+//        }
+//        
+//        // Combinators - ViewModel uses these, no GRDB knowledge needed
+//        func and(_ other: Filter) -> Filter {
+//            Filter(expression: expression && other.expression)
+//        }
+//        
+//        func or(_ other: Filter) -> Filter {
+//            Filter(expression: expression || other.expression)
+//        }
+//        
+//        func not() -> Filter {
+//            Filter(expression: !expression)
+//        }
+//    }
+//}
+
+
+
+struct GRDBFilter
+{
+    enum CoinFilter
+    {
+        static var currentHoldingsFilter: SQLExpression
+        {
+            return Column(Coin.CodingKeys.currentHoldings) > 0
+        }
+    }
+}
+
+extension QueryInterfaceRequest
+{
+    func and(_ value: Self) -> Self
+    {
+        return value.filter(value)
+    }
+}
+
+extension SQLExpression
+{
+    func and(_ value: Self) -> Self
+    {
+        return value && self
+    }
+    
+    func or(_ value: Self) -> Self
+    {
+        return value || self
+    }
+}

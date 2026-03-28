@@ -17,7 +17,8 @@ final class HomeViewModel
     // TODO: remove mock data when done testing
     // MARK: - Stored properties
     private(set) var coins: [Coin] = []
-    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
+//    private(set) var holdingCoins: [Coin] = Coin.mockHoldings
+    private(set) var holdingCoins: [Coin] = []
     private(set) var marketStatistics: [StatisticModel] = []
     private var subscribers: Set<AnyCancellable> = []
     private var searchTask: Task<Void, Never>?
