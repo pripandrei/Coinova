@@ -15,7 +15,7 @@ final class PortfolioViewModel
 //    var holdingCoins: [Coin] = Coin.mockHoldings
     var holdingCoins: [Coin] = []
     
-    private var selectedCoinHoldings: Double?
+    private(set) var selectedCoinHoldings: Double?
     private(set) var selectedCoin: Coin?
     
     //MARK: - Dependencies
@@ -39,12 +39,13 @@ final class PortfolioViewModel
         }
     }
     
-    var selectedCoinHoldingsAbsoluteValue: Double
+    var selectedCoinHoldingsAbsoluteValue: Double?
     {
         get {
-            selectedCoinHoldings ?? 0.0
+            selectedCoinHoldings 
         }
         set {
+            guard let newValue else { selectedCoinHoldings = newValue; return }
             selectedCoinHoldings = abs(newValue)
         }
     }
@@ -90,11 +91,14 @@ extension PortfolioViewModel
         
         localDatabase.save(updatedCoin)
         
-        if let index = holdingCoins.firstIndex(where: { $0.id == updatedCoin.id })
+        holdingCoins.removeAll(where: { $0.id == updatedCoin.id } )
+    
+        if selectedCoinHoldings > 0.0
         {
-            holdingCoins.remove(at: index)
+            holdingCoins.append(updatedCoin)
         }
-        holdingCoins.append(updatedCoin)
+        
+        self.selectedCoinHoldings = nil
     }
     
     func updateHoldingAmount(_ value: Double?)

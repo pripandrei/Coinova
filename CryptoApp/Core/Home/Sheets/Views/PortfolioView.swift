@@ -193,6 +193,7 @@ extension PortfolioView
                 {
                     onSave()
                 }
+                ._disabled(isSaveDisabled)
             }
             .sharedBackgroundVisibility(.hidden)
         } else {
@@ -207,6 +208,7 @@ extension PortfolioView
                 NavigationButton(style: .text("Save")) {
                     onSave()
                 }
+                ._disabled(isSaveDisabled)
             }
         }
     }
@@ -269,10 +271,28 @@ extension PortfolioView
             return hasQuery && hasResults
         }
     }
+    
+    private var isSaveDisabled: Bool
+    {
+        guard let holdings = viewModel.selectedCoinHoldingsAbsoluteValue else
+        { return true }
+        return !(holdings != viewModel.selectedCoin?.currentHoldings)
+    }
 }
 
 #Preview {
     let vm = HomeViewModel()
     PortfolioView(vm.coins)
         .environment(vm)
+}
+
+
+extension View
+{
+    func _disabled(_ isDisabled: Bool) -> some View
+    {
+        self
+            .opacity(isDisabled ? 0.4 : 1.0)
+            .disabled(isDisabled)
+    }
 }
