@@ -17,6 +17,17 @@ struct CoinDetailView: View
     
     var body: some View
     {
-       
+        ZStack
+        {
+            
+        }
+        .task {
+            do
+            {
+                try await viewModel.getCoinDetails()
+            } catch {
+                print("Error fetching coin details: \(error.localizedDescription)")
+            }
+        }
     }
 }

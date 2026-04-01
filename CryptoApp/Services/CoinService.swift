@@ -14,6 +14,7 @@ protocol CointServiceProtocol
     var coins: CurrentValueSubject<[Coin], Never> { get }
     var holdingCoins: CurrentValueSubject<[Coin], Never> { get }
     func fetchCoins(from url: String) throws
+    func fetchCoinDetails(from url: String) async throws -> CoinDetail
 }
 
 
@@ -29,6 +30,7 @@ final class CoinService: CointServiceProtocol
        observeHoldingCoins()
     }
     
+    /// coin fetch
     func fetchCoins(from url: String) throws
     {
         guard let url = URL(string: url) else {throw NetworkError.invalidPath}
@@ -48,6 +50,20 @@ final class CoinService: CointServiceProtocol
             }.store(in: &subscribers)
     }
     
+    /// coin detail fetch
+    func fetchCoinDetails(from url: String) async throws -> CoinDetail
+    {
+        guard let url = URL(string: url) else { throw NetworkError.invalidPath}
+        
+        let (data, urlRespons) = try await URLSession.shared.data(from: url)
+        
+        try NetworkingManager.handleURLResponse(urlRespons)
+        
+        let details = try JSONDecoder().decode(CoinDetail.self, from: data)
+        return details
+    }
+    
+    /// observers
     private func observeHoldingCoins()
     {
         db.observe(type: Coin.self,
