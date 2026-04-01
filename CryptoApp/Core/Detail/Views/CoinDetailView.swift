@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CoinDetailView: View
+struct CoinDetailScreen: View
 {
     @State private var viewModel: CoinDetailViewModel
     
@@ -19,7 +19,7 @@ struct CoinDetailView: View
     {
         ZStack
         {
-            
+            Text("Welcom to coin detail view !")
         }
         .task {
             do

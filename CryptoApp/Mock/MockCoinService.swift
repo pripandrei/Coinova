@@ -21,5 +21,11 @@ final class MockCoinService: CointServiceProtocol
     func retrieveHoldingCoins() {
         self.holdingCoins.send(Coin.mockHoldings)
     }
+    
+    func fetchCoinDetails(from url: String) async throws -> CoinDetail
+    {
+        return CoinDetail.mockCoinDetails
+    }
+    
 }
 #endif

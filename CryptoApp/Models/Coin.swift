@@ -47,7 +47,7 @@
 import Foundation
 import GRDB
 
-struct Coin: Identifiable, Codable, FetchableRecord, PersistableRecord
+struct Coin: Identifiable, Hashable, Codable, FetchableRecord, PersistableRecord
 {
     static let databaseTableName: String = "coin"
     
@@ -116,7 +116,7 @@ struct Coin: Identifiable, Codable, FetchableRecord, PersistableRecord
 }
 
 //MARK: - Sparkline in 7d
-struct SparklineIn7d: Codable
+struct SparklineIn7d: Codable, Hashable
 {
     let price: [Double]
 }
@@ -167,7 +167,6 @@ extension Coin
         )
     }
 }
-
 
 //MARK: - Coin filters
 

@@ -12,44 +12,57 @@ struct HomeView: View
     @State private var viewModel: HomeViewModel = .init()
     @State private var sheetOption: HomeSheetOption?
     
+    @Environment(NavigationRouter.self) private var router
+    
     var body: some View
     {
-        ZStack
+        @Bindable var router = router
+        
+        NavigationStack(path: $router.homePath)
         {
-            Color.theme.background
-                .ignoresSafeArea()
-         
-            VStack
+            ZStack
             {
-                header
+                Color.theme.background
+                    .ignoresSafeArea()
                 
-                HomeStatsView(showPortfolio: viewModel.displayMode == .portfolio)
-                    .padding(.top, 10)
-                
-                SearchBarView(searchQuery: $viewModel.searchQuery)
-                    .padding(.vertical, 20)
-                
-                coinListHeader
-                
-                ZStack
+                VStack
                 {
-                    contentList
-                    if viewModel.searchService.searchedCoins?.isEmpty == true
+                    header
+                    
+                    HomeStatsView(showPortfolio: viewModel.displayMode == .portfolio)
+                        .padding(.top, 10)
+                    
+                    SearchBarView(searchQuery: $viewModel.searchQuery)
+                        .padding(.vertical, 20)
+                    
+                    coinListHeader
+                    
+                    ZStack
                     {
-                        noCoinDataView
+                        contentList
+                        if viewModel.searchService.searchedCoins?.isEmpty == true
+                        {
+                            noCoinDataView
+                        }
                     }
                 }
             }
-        }
-        .task {
-            if viewModel.subscribers.isEmpty
-            {
-                viewModel.setupSubscribers()
-                viewModel.retrieveHoldingCoins()
-                viewModel.getCoins()
+            .task {
+                if viewModel.subscribers.isEmpty
+                {
+                    viewModel.setupSubscribers()
+                    viewModel.retrieveHoldingCoins()
+                    viewModel.getCoins()
+                }
+            }
+            .environment(viewModel)
+            .navigationDestination(for: HomeRoute.self) { route in
+                switch route
+                {
+                case .coinDetails(let coin): CoinDetailScreen(coin: coin)
+                }
             }
         }
-        .environment(viewModel)
     }
 }
 

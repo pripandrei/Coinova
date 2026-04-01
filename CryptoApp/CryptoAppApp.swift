@@ -11,15 +11,19 @@ import FactoryKit
 @main
 struct CryptoAppApp: App
 {
+    @State private var navigationRouter = NavigationRouter()
+    
     init() {
         #if DEBUG
         configureMockData()
         #endif
     }
+    
     var body: some Scene
     {
         WindowGroup {
             HomeView()
+                .environment(navigationRouter)
         }
     }
 }

@@ -134,3 +134,25 @@ struct Description: Codable
     let end: String
 }
 
+
+
+//MARK: - mock data
+
+extension CoinDetail
+{
+    static let mockCoinDetails: CoinDetail = CoinDetail(
+        id: "bitcoin",
+        symbol: "btc",
+        name: "Bitcoin",
+        blockTimeInMinutes: 10,
+        hashingAlgorithm: "SHA-256",
+        genesisDate: "2009-01-03",
+        categories: ["Cryptocurrency", "Layer 1", "Proof of Work"],
+        description: Description(end: "Bitcoin is the first successful internet money based on peer-to-peer technology, whereby no central bank or authority is involved in the transaction and production of the Bitcoin currency."),
+        links: Links(
+            homepage: ["https://bitcoin.org"],
+            subredditUrl: "https://www.reddit.com/r/Bitcoin/"
+            )
+        )
+}
+

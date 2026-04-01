@@ -10,6 +10,7 @@ import SwiftUI
 struct CoinListView: View
 {
     let coins: [Coin]
+    @Environment(NavigationRouter.self) var router
     
     var body: some View
     {
@@ -19,6 +20,9 @@ struct CoinListView: View
                                          leading: 5,
                                          bottom: 10,
                                          trailing: 15))
+                .onTapGesture {
+                    router.openCoinDetailsScreen(coin)
+                }
         }
         .listStyle(.plain)
         .animation(.easeOut, value: coins)
