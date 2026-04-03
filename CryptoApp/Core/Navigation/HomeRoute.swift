@@ -8,7 +8,6 @@
 enum HomeRoute: Hashable
 {
     case coinDetails(Coin)
-//    case settings
     
     var id: Self { self }
 }

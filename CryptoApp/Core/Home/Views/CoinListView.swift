@@ -16,6 +16,7 @@ struct CoinListView: View
     {
         List(coins) { coin in
             CoinRowView(coin: coin)
+                .contentShape(Rectangle())
                 .listRowInsets(EdgeInsets(top: 10,
                                          leading: 5,
                                          bottom: 10,

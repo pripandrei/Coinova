@@ -19,7 +19,7 @@ struct CoinDetailScreen: View
     {
         ZStack
         {
-            Text("Welcom to coin detail view !")
+            Text("Welcome to coin detail view, selected coin: \(viewModel.coin.id)")
         }
         .task {
             do
