@@ -111,8 +111,9 @@ struct CoinDetail: Codable
     
     enum CodingKeys: String, CodingKey
     {
-        case id, symbol, name, genesisDate,
+        case id, symbol, name,
              categories, description, links
+        case genesisDate = "genesis_date"
         case hashingAlgorithm = "hashing_algorithm"
         case blockTimeInMinutes = "block_time_in_minutes"
     }
@@ -131,7 +132,7 @@ struct Links: Codable
 
 struct Description: Codable
 {
-    let end: String
+    let en: String
 }
 
 
@@ -148,7 +149,7 @@ extension CoinDetail
         hashingAlgorithm: "SHA-256",
         genesisDate: "2009-01-03",
         categories: ["Cryptocurrency", "Layer 1", "Proof of Work"],
-        description: Description(end: "Bitcoin is the first successful internet money based on peer-to-peer technology, whereby no central bank or authority is involved in the transaction and production of the Bitcoin currency."),
+        description: Description(en: "Bitcoin is the first successful internet money based on peer-to-peer technology, whereby no central bank or authority is involved in the transaction and production of the Bitcoin currency."),
         links: Links(
             homepage: ["https://bitcoin.org"],
             subredditUrl: "https://www.reddit.com/r/Bitcoin/"

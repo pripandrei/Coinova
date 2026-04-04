@@ -9,8 +9,6 @@ import Foundation
 import GRDB
 import Combine
 
-typealias DBColumn = Column
-
 final class GRDBDatabase
 {
     private let dbQueue: DatabaseQueue
@@ -100,7 +98,8 @@ extension GRDBDatabase
         }
     }
     
-    func fetch<T: FetchableRecord & PersistableRecord>(type: T.Type, by id: String) throws -> T?
+    func fetch<T: FetchableRecord & PersistableRecord>(type: T.Type,
+                                                       by id: String) throws -> T?
     {
         try dbQueue.read { db in
             try type.fetchOne(db, key: id)
