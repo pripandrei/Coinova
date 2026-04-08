@@ -11,6 +11,7 @@ struct HomeStatsView: View
 {
     private let spacing: CGFloat = 15
     var showPortfolio: Bool
+    
     @Environment(HomeViewModel.self) var homeVM
     
     var body: some View
@@ -18,26 +19,11 @@ struct HomeStatsView: View
         GeometryReader { proxy in
             HStack(spacing: spacing - 5) {
                 ForEach(homeVM.marketStatistics) { statisticData in
-                    VStack(alignment: .leading)
-                    {
-                        Text(statisticData.title)
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                            .foregroundStyle(Color.theme.secondaryText)
-                        Text(statisticData.value)
-                            .font(.title3)
-                            .fontWeight(.semibold)
-                            .foregroundStyle(Color.theme.accent)
-
-                        if let percentage = statisticData.percentageChange,
-                           percentage != 0.0
-                        {
-                            percentageChangeSymbol(percentage)
-                        }
-                    }
-                    .frame(width: (proxy.size.width / 3) - spacing)
-                    .frame(maxHeight: .infinity, alignment: .top)
-//                    .background(.green)
+                    StatisticView(statisticData: statisticData,
+                                  fontSchema: Self.statisticFontSchema)
+                        .frame(width: (proxy.size.width / 3) - spacing)
+                        .frame(maxHeight: .infinity, alignment: .top)
+//                        .background(.green)
                 }
             }
             .padding(.horizontal, spacing / 2)
@@ -53,19 +39,14 @@ struct HomeStatsView: View
     }
 }
 
-// Views components
 extension HomeStatsView
 {
-    private func percentageChangeSymbol(_ value: Double) -> some View
-    {
-        return HStack {
-            Image(systemName: value > 0 ? "arrowtriangle.up.fill" : "arrowtriangle.down.fill")
-            Text("\(value.asPercentWithDecimals())")
-        }
-        .font(.subheadline)
-        .fontWeight(.medium)
-        .foregroundStyle(value < 0 ? Color.theme.red : Color.theme.green)
-    }
+    static let statisticFontSchema: StatisticView.StatisticFontSchema = .init(title: .subheadline,
+              titleWeight: .medium,
+              value: .title3,
+              valueWeight: .semibold,
+              percentageChange: .subheadline,
+              percentageWeight: .medium)
 }
 
 struct HomeStatsView2: View

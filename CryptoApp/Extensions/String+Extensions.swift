@@ -19,4 +19,8 @@ extension String
     {
         return self.sha256
     }
+    
+    var lastWord: String {
+        return self.components(separatedBy: " ").last ?? ""
+    }
 }

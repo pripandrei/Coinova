@@ -135,6 +135,14 @@ struct Description: Codable
     let en: String
 }
 
+// MARK: CoinDetail helpers
+extension CoinDetail
+{
+    func getTitle(from field: CoinDetail.CodingKeys) -> String
+    {
+        field.rawValue.split(separator: "_").map(\.capitalized).joined(separator: " ")
+    }
+}
 
 
 //MARK: - mock data

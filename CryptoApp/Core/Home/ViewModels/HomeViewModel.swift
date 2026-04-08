@@ -74,7 +74,7 @@ final class HomeViewModel
                   value: data.data.btcDominance),
             
             .init(title: StatisticModel.Title.portfolio.rawValue,
-                  value: "0.0",
+                  value: "$" + "0.0",
                   percentageChange: -34.3)
         ]
     }

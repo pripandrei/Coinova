@@ -113,6 +113,11 @@ struct Coin: Identifiable, Hashable, Codable, FetchableRecord, PersistableRecord
     {
         return (self.currentHoldings ?? 0.0) * currentPrice
     }
+    
+    func getTitle(from field: Coin.CodingKeys) -> String
+    {
+        return field.rawValue.split(separator: "_").map(\.capitalized).joined(separator: " ")
+    }
 }
 
 //MARK: - Sparkline in 7d
