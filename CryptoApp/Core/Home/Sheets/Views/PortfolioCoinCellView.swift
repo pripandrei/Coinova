@@ -17,16 +17,8 @@ struct PortfolioCoinCellView: View
     {
         VStack(spacing: 10)
         {
-            KFImage(URL(string: coin.image))
-                .memoryCacheExpiration(.expired)
-                .cancelOnDisappear(true)
-                .placeholder({
-                    ProgressView()
-                        .frame(width: 30, height: 30)
-                })
-                .resizable()
-                .scaledToFill()
-                .frame(width: 50, height: 50)
+            KFCoinImage(imagePath: coin.image,
+                        size: .init(width: 50, height: 50))
             
             VStack(spacing: 2)
             {

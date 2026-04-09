@@ -47,7 +47,7 @@ struct CoinDetailScreen: View
                     Text(viewModel.coin.symbol.uppercased())
                         .fontWeight(.semibold)
                         .foregroundStyle(Color.theme.accent)
-                    coinImage
+                    KFCoinImage(imagePath: viewModel.coin.image)
                 }
             }
             .hideToolbarInteractionIfNeeded()
@@ -111,26 +111,6 @@ extension CoinDetailScreen
         percentageChange: .caption2,
         percentageWeight: .medium
     ) 
-}
-
-//MARK: - Navigation items
-extension CoinDetailScreen
-{
-    private var coinImage: some View
-    {
-        KFImage(URL(string: viewModel.coin.image))
-            .memoryCacheExpiration(.expired) // don't store in memory cache, only Disk cache
-            .cancelOnDisappear(true)
-            .placeholder({ progress in
-                ProgressView()
-                    .frame(width: 30, height: 30)
-            })
-            .resizable()
-            .scaledToFill()
-            .frame(width: 30, height: 30)
-            .clipShape(.circle)
-            .transaction { $0.animation = nil }
-    }
 }
 
 #if DEBUG

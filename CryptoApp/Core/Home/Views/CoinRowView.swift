@@ -30,7 +30,7 @@ struct CoinRowView: View
             {
                 marketRank
                 //            CoinImage(coin: coin)
-                coinImage
+                KFCoinImage(imagePath: coin.image)
                 symbol
                 
                 Spacer()
@@ -67,24 +67,6 @@ extension CoinRowView
         Text(coin.symbol.uppercased())
             .font(.headline)
             .fontWeight(.semibold)
-    }
-    
-    private var coinImage: some View
-    {
-        KFImage(URL(string: coin.image))
-            .memoryCacheExpiration(.expired) // don't store in memory cache, only Disk cache
-            .cancelOnDisappear(true)
-//            .cacheOriginalImage()
-//            .fade(duration: 0.1)
-            .placeholder({ progress in
-                ProgressView()
-                    .frame(width: 30, height: 30)
-            })
-            .resizable()
-            .scaledToFill()
-            .frame(width: 30, height: 30)
-            .clipShape(.circle)
-            .transaction { $0.animation = nil }
     }
     
     private var holdings: some View
