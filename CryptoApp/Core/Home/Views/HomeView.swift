@@ -222,5 +222,6 @@ extension HomeView
 
 #Preview {
     HomeView()
+        .environment(NavigationRouter())
 }
 
