@@ -27,7 +27,9 @@ struct CoinDetailScreen: View
             VStack(spacing: 30)
             {
                 sectionTitle("Overview")
-                
+
+                description
+
                 overviewGridInfo
                 
                 sectionTitle("Additional Details")
@@ -49,6 +51,86 @@ struct CoinDetailScreen: View
 //MARK: View components
 extension CoinDetailScreen
 {
+    private var description: some View
+    {
+        Text(viewModel.coinDetails?.description?.en ?? "")
+            .font(.body)
+            .withTruncationEffect(3)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
+  
+//    @ViewBuilder
+//    private var description2: some View
+//    {
+//        VStack(alignment: .leading, spacing: 0)
+//        {
+//            Text(tempText)
+//                .font(.title2)
+//                .multilineTextAlignment(.leading)
+////                .padding(.bottom, 8)
+//                .frame(
+//                    height: showFullDescription ? textHeight : collapsedHeight,
+//                    alignment: .topLeading
+//                )
+//                .clipped()
+//                // Hidden full-size copy just for measurement
+//                .background(
+//                    Text(tempText)
+//                        .font(.title2)
+//                        .multilineTextAlignment(.leading)
+////                        .padding(.bottom, 8)
+//                        .fixedSize(horizontal: false, vertical: true)
+//                        .hidden()
+//                        .background(
+//                            Color.clear
+//                                .onGeometryChange(for: CGFloat.self, of: { geo in
+//                                    geo.size.height
+//                                }, action: { newValue in
+//                                    textHeight = newValue
+//                                })
+//                        )
+//                )
+//
+//            if textHeight > collapsedHeight {
+//                Button {
+//                    descriptionSizeChanged.toggle()
+//                    withAnimation(.easeOut(duration: 0.5)) {
+//                        showFullDescription.toggle()
+//                    }
+//                } label: {
+//                    Text(descriptionSizeChanged ? "Read less..." : "Read more...")
+//                        .font(.callout)
+//                        .foregroundColor(.blue)
+//                        .padding(.bottom, 8)
+//                }
+//            }
+//        }
+//    }
+    
+    
+//    @ViewBuilder
+//    private var description3: some View
+//    {
+//        VStack(alignment: .leading, spacing: 10)
+//        {
+//            Text(viewModel.coinDetails?.description?.en ?? "")
+////                .font(.callout)
+//                .lineLimit(showFullDescription ? nil : 3)
+////                .multilineTextAlignment(.leading)
+//            
+//            Button {
+//                withAnimation(.linear) {
+//                    showFullDescription.toggle()
+//                }
+//            } label: {
+//                Text("Read more...")
+////                    .font(.subheadline)
+//                    .foregroundStyle(.link)
+//            }
+//        }
+////        .frame(maxWidth: .infinity)
+//    }
+    
     private func sectionTitle(_ title: String) -> some View
     {
         Text(title)
@@ -93,3 +175,5 @@ extension CoinDetailScreen
     CoinDetailScreen(coin: Coin.mockCoins.first!)
 }
 #endif
+
+

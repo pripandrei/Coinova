@@ -20,4 +20,9 @@ extension View
     {
         self.buttonStyle(PressableButtonStyle(scaleFactor: scaleFactor))
     }
+    
+    func withTruncationEffect(_ lineLimit: Int) -> some View
+    {
+        self.modifier(TruncationEffectViewModifier(lineLimit: lineLimit))
+    }
 }

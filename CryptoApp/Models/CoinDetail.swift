@@ -147,6 +147,7 @@ extension CoinDetail
 
 //MARK: - mock data
 
+#if DEBUG
 extension CoinDetail
 {
     static let mockCoinDetails: CoinDetail = CoinDetail(
@@ -164,4 +165,5 @@ extension CoinDetail
             )
         )
 }
+#endif
 
