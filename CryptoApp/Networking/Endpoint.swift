@@ -19,10 +19,10 @@ enum APIEndpoint
     {
         switch self
         {
-        case .coins: return "/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h"
+        case .coins: return "/coins/markets?x_cg_demo_api_key=\(Config.coinGeckoAPIKey)&vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h"
         case .marketData: return "/global"
         case .coinDetails(let id): return """
-            /coins/\(id)?localization=false\
+            /coins/\(id)?x_cg_demo_api_key=\(Config.coinGeckoAPIKey)&localization=false\
             &tickers=false\
             &market_data=false\
             &community_data=false\

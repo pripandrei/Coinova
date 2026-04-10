@@ -1,0 +1,8 @@
+//
+//  Config.xcconfig
+//  CryptoApp
+//
+//  Created by Andrei Pripa on 4/10/26.
+//
+
+COINGECKO_API_KEY = CG-hKuz8W8s2VTCUuoo2eGg4LCJ

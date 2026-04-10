@@ -140,7 +140,7 @@ extension CoinDetailScreen
         titleWeight: .medium,
         value: .headline,
         valueWeight: .semibold,
-        percentageChange: .caption2,
+        percentageChange: .caption,
         percentageWeight: .medium
     ) 
 }
