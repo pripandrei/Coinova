@@ -122,7 +122,7 @@ struct CoinDetail: Codable
 struct Links: Codable
 {
     let homepage: [String]
-    let subredditUrl : String
+    let subredditUrl : String?
     
     enum CodingKeys: String, CodingKey {
         case homepage
