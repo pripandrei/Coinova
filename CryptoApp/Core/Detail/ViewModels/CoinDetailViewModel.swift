@@ -58,8 +58,27 @@ final class CoinDetailViewModel
     
     private func createAdditionalDetailsData() -> [StatisticModel]
     {
+        let high24h = StatisticModel(title: coin.getTitle(from: .high24h),
+                                     value: coin.high24h?.asCurrenyWithDecimals() ?? "0.0")
         
-        return []
+        let low24h = StatisticModel(title: coin.getTitle(from: .low24h),
+                                    value: coin.low24h?.asCurrenyWithDecimals() ?? "0.0")
+        
+        let priceChange24h = StatisticModel(title: coin.getTitle(from: .priceChange24h),
+                                            value: coin.priceChange24h?.asCurrenyWithDecimals() ?? "0.0",
+                                            percentageChange: coin.priceChangePercentage24h)
+        
+        let marketCapChange24h = StatisticModel(title: coin.getTitle(from: .marketCapChange24h),
+                                                value: coin.marketCapChange24h?.abbreviated() ?? "0.0",
+                                                percentageChange: coin.marketCapChangePercentage24h)
+        
+        let blockTime = StatisticModel(title: coinDetails?.getTitle(from: .blockTimeInMinutes) ?? "",
+                                       value: coinDetails?.blockTimeInMinutes.map { String($0) } ?? "n/a")
+        
+        let hashingAlgorithm = StatisticModel(title: coinDetails?.getTitle(from: .hashingAlgorithm) ?? "",
+                                              value: coinDetails?.hashingAlgorithm ?? "n/a")
+        
+        return [high24h, low24h, priceChange24h, marketCapChange24h, blockTime, hashingAlgorithm]
     }
     
 }

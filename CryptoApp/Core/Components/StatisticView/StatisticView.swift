@@ -14,7 +14,7 @@ struct StatisticView: View
     
     var body: some View
     {
-        VStack(alignment: .leading)
+        VStack(alignment: .leading, spacing: 5)
         {
             Text(statisticData.title)
                 .font(fontSchema.title)
@@ -30,6 +30,7 @@ struct StatisticView: View
                percentage != 0.0
             {
                 percentageChangeSymbol(percentage)
+//                    .padding(.top, 5)
             }
         }
     }

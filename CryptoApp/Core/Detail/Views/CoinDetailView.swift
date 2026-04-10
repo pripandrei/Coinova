@@ -34,7 +34,11 @@ struct CoinDetailScreen: View
                 overviewGridInfo
                 
                 sectionTitle("Additional Details")
-            } 
+                
+                additionalDetailsGridInfo
+                
+               links
+            }
             .padding(.horizontal, 20)
         }
         .navigationTitle(viewModel.coin.name)
@@ -85,7 +89,7 @@ extension CoinDetailScreen
     
     private var overviewGridInfo: some View
     {
-        LazyVGrid(columns: columns, spacing: 30)
+        LazyVGrid(columns: columns, spacing: 25)
         {
             ForEach(viewModel.overview) { stat in
                 StatisticView(statisticData: stat,
@@ -97,10 +101,38 @@ extension CoinDetailScreen
     
     private var additionalDetailsGridInfo: some View
     {
-        LazyVGrid(columns: columns, spacing: 30)
+        LazyVGrid(columns: columns, spacing: 25)
         {
-            
+            ForEach(viewModel.additionalDetails) { stat in
+                StatisticView(statisticData: stat,
+                              fontSchema: Self.statisticFontSchema)
+            }
         }
+    }
+    
+    private var links: some View
+    {
+        VStack(alignment: .leading, spacing: 15)
+        {
+            if let url = URL(string: viewModel.coinDetails?.links?.homepage.first ?? "")
+            {
+                Link(destination: url) {
+                    Text("Website")
+                        .foregroundStyle(.link)
+                }
+            }
+            
+            if let url = URL(string: viewModel.coinDetails?.links?.subredditUrl ?? "")
+            {
+                Link(destination: url) {
+                    Text("Reddit")
+                        .foregroundStyle(.link)
+                }
+            }
+        }
+        .font(.body)
+        .fontWeight(.medium)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     static let statisticFontSchema: StatisticView.StatisticFontSchema = .init(
