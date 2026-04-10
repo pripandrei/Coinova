@@ -58,7 +58,7 @@ final class CoinService: CointServiceProtocol
         let (data, urlRespons) = try await URLSession.shared.data(from: url)
         
         try NetworkingManager.handleURLResponse(urlRespons)
-        
+
         let details = try JSONDecoder().decode(CoinDetail.self, from: data)
         return details
     }
