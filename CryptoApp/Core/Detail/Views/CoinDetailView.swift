@@ -71,12 +71,19 @@ struct CoinDetailScreen: View
 //MARK: View components
 extension CoinDetailScreen
 {
+    @ViewBuilder
     private var description: some View
     {
-        Text(viewModel.coinDetails?.description?.en ?? "")
-            .font(.body)
-            .withTruncationEffect(3)
-            .frame(maxWidth: .infinity, alignment: .leading)
+        if let description = viewModel.coinDetails?.description?.en,
+           !description.isEmpty
+        {
+            Text(description)
+                .font(.body)
+                .withTruncationEffect(3)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            EmptyView()
+        }
     }
 
     private func sectionTitle(_ title: String) -> some View

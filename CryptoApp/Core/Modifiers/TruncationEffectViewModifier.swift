@@ -47,15 +47,18 @@ struct TruncationEffectViewModifier: ViewModifier
                            alignment: .top)
                     .clipped()
 
-            Button {
-                descriptionSizeChanged.toggle()
-                withAnimation(.easeOut(duration: 0.3)) {
-                    showFullDescription.toggle()
+            if fullHeight > limitedHeight
+            {
+                Button {
+                    descriptionSizeChanged.toggle()
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        showFullDescription.toggle()
+                    }
+                } label: {
+                    Text(descriptionSizeChanged ? "Read less..." : "Read more...")
+                        .font(.callout)
+                        .foregroundColor(.blue)
                 }
-            } label: {
-                Text(descriptionSizeChanged ? "Read less..." : "Read more...")
-                    .font(.callout)
-                    .foregroundColor(.blue)
             }
         }
     }
