@@ -10,32 +10,71 @@ import Charts
 
 struct CoinHistoryPriceChart: View
 {
-    let coin: Coin
-    
-    let chartData: [PricePoint]
-    
-    let minPrice: Double
-    let maxPrice: Double
-     
+    @State private var viewModel: CoinHistoryPriceChartViewModel
+
     init(coin: Coin)
     {
-        self.coin = coin
-        self.chartData = Self.getChartData(from: coin)
-        self.minPrice = coin.sparklineIn7d?.price.min() ?? 0.0
-        self.maxPrice = coin.sparklineIn7d?.price.max() ?? 0.0
+        self._viewModel = State(initialValue: CoinHistoryPriceChartViewModel(coin: coin))
     }
     
+    @State private var shouldAnimate: Bool = false
+       
     var body: some View
     {
-        Chart(chartData) { item in
-            buildAreaMark(from: item)
-            buildLineMark(from: item)
+        Chart(viewModel.chartData) { item in
+            
         }
-        .chartYScale(domain: priceRangeY)
-        .chartXScale(domain: priceRangeX)
-//        .chartXAxis(.hidden)
-//        .chartYAxis(.hidden)
+        .chartYScale(domain: viewModel.priceRangeY)
+        .chartXScale(domain: viewModel.priceRangeX)
+        .chartXAxis {
+            AxisMarks(values: xAxisMarks) { value in
+                AxisValueLabel(format: .dateTime.month(.abbreviated).day())
+            }
+        }
+        .chartYAxis {
+            AxisMarks(values: [viewModel.minPrice, viewModel.maxPrice])
+            { value in
+                if let price = value.as(Double.self) {
+                    AxisValueLabel {
+                        Text("$\(price.abbreviated())")
+                    }
+                }
+            }
+        }
         .frame(height: 300)
+        .chartOverlay(alignment: .leading, content: { proxy in
+//            GeometryReader { geo in
+                Chart(viewModel.chartData) { item in
+                    buildAreaMark(from: item)
+                    buildLineMark(from: item)
+                }
+                .chartYScale(domain: viewModel.priceRangeY)
+//                .chartXScale(domain: viewModel.priceRangeX)
+                .chartXAxis(.hidden)
+                .chartYAxis(.hidden)
+                .frame(width: proxy.plotSize.width)
+                .frame(height: proxy.plotSize.height)
+//            }
+            .mask(alignment: .leading) {
+                Rectangle()
+                    .frame(maxWidth: shouldAnimate ? .infinity : 0)
+            }
+        })
+        .onAppear(perform: {
+            shouldAnimate = false
+            
+            withAnimation(.easeInOut(duration: 3.0)) {
+                shouldAnimate = true
+            }
+        })
+    }
+     
+    var xAxisMarks: [Date]
+    {
+        guard let first = viewModel.chartData.first?.date,
+              let last = viewModel.chartData.last?.date else { return [] }
+
+        return [first, last]
     }
 }
 
@@ -46,7 +85,7 @@ extension CoinHistoryPriceChart
     {
         AreaMark(
             x: .value("Time", item.date),
-            yStart: .value("Min", minPrice),
+            yStart: .value("Min", viewModel.minPrice),
             yEnd: .value("Price", item.price)
         )
         .foregroundStyle(
@@ -71,55 +110,12 @@ extension CoinHistoryPriceChart
         .lineStyle(StrokeStyle(lineWidth: 2.0))
         .foregroundStyle(.green)
         .shadow(color: .green.opacity(0.7),
-                radius: 20,
+                radius: 10,
                 x: 0,
                 y: 0)
     }
 }
 
-//MARK: - helpers
-extension CoinHistoryPriceChart
-{
-    private var priceRangeX: ClosedRange<Date>
-    {
-        guard let first = chartData.first?.date,
-              let last = chartData.last?.date else {
-            return Date()...Date()
-        }
-
-        let padding: TimeInterval = 60 * 60 * 7
-
-        return first.addingTimeInterval(-padding)...last.addingTimeInterval(padding)
-    }
-    
-    private var priceRangeY: ClosedRange<Double>
-    {
-        let padding = (maxPrice - minPrice) * 0.10
-        return (minPrice - padding)...(maxPrice + padding)
-//        return minPrice...maxPrice
-    }
-
-    static private func getChartData(from coin: Coin) -> [PricePoint]
-    {
-        let totalPoints = coin.sparklineIn7d?.price.count ?? 0
-        let secondsIn7Days: Double = 7 * 24 * 60 * 60
-
-        let interval = secondsIn7Days / Double(totalPoints)
-        
-        let now = Date()
-        
-        let chartData: [PricePoint] = coin.sparklineIn7d?.price
-            .enumerated()
-            .map { index, price in
-                let timeOffset = Double(totalPoints - index) * interval
-                let date = now.addingTimeInterval(-timeOffset)
-                
-                return PricePoint(date: date, price: price)
-            } ?? []
-        
-        return chartData
-    }
-}
 
 struct PricePoint: Identifiable
 {
