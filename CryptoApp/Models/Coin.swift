@@ -181,15 +181,9 @@ extension Coin
     {
         return CodingKeys.currentHoldings.column > 0
     }
-
-    // exmample
-//    static var topRank: SQLExpression
-//    {
-//        return Column(CodingKeys.marketCapRank) <= 86
-//    }
 }
 
-
+//MARK: - DB Column
 extension CodingKey
 {
     var column: Column

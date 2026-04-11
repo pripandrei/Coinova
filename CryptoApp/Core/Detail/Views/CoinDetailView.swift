@@ -152,6 +152,7 @@ extension CoinDetailScreen
     ) 
 }
 
+
 #if DEBUG
 #Preview
 {
