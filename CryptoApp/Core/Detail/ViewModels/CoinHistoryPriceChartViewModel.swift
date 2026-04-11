@@ -23,6 +23,12 @@ final class CoinHistoryPriceChartViewModel
         self.chartData = getChartData(from: coin)
     }
     
+    var maxPricePoint: PricePoint?
+    {
+        return chartData.max(by: { $0.price < $1.price }) 
+        
+    }
+    
     var priceRangeX: ClosedRange<Date>
     {
         guard let first = chartData.first?.date,

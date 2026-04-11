@@ -31,16 +31,17 @@ struct CoinHistoryPriceChart: View
                 AxisValueLabel(format: .dateTime.month(.abbreviated).day())
             }
         }
-        .chartYAxis {
-            AxisMarks(values: [viewModel.minPrice, viewModel.maxPrice])
-            { value in
-                if let price = value.as(Double.self) {
-                    AxisValueLabel {
-                        Text("$\(price.abbreviated())")
-                    }
-                }
-            }
-        }
+        .chartYAxis(.hidden)
+//        .chartYAxis {
+//            AxisMarks(values: [viewModel.minPrice, viewModel.maxPrice])
+//            { value in
+//                if let price = value.as(Double.self) {
+//                    AxisValueLabel {
+//                        Text("$\(price.abbreviated())")
+//                    }
+//                }
+//            }
+//        }
         .frame(height: 300)
         .chartOverlay(alignment: .leading, content: { proxy in
 //            GeometryReader { geo in
@@ -59,11 +60,13 @@ struct CoinHistoryPriceChart: View
                 Rectangle()
                     .frame(maxWidth: shouldAnimate ? .infinity : 0)
             }
+            
+            getTopPriceMark(inChartProxy: proxy)
         })
         .onAppear(perform: {
             shouldAnimate = false
             
-            withAnimation(.easeInOut(duration: 3.0)) {
+            withAnimation(.easeInOut(duration: 1.5)) {
                 shouldAnimate = true
             }
         })
@@ -114,6 +117,26 @@ extension CoinHistoryPriceChart
                 x: 0,
                 y: 0)
     }
+    
+    @ViewBuilder
+    private func getTopPriceMark(inChartProxy proxy: ChartProxy) -> some View
+    {
+        if let maxPrice = viewModel.maxPricePoint,
+            let xPosition = proxy.position(forX: maxPrice.date),
+            let yPosition = proxy.position(forY: maxPrice.price)
+        {
+            Text("$\(maxPrice.price.abbreviated())")
+                .font(.footnote)
+                .foregroundStyle(Color.theme.secondaryText)
+                .position(x: xPosition + 20,
+                          y: yPosition - 10)
+                .opacity(shouldAnimate ? 1.0 : 0.0)
+                .animation(.linear(duration: 0.5),
+                           value: shouldAnimate)
+        } else {
+            EmptyView()
+        }
+    }
 }
 
 
@@ -124,11 +147,12 @@ struct PricePoint: Identifiable
     let price: Double
 }
 
+#if DEBUG
 #Preview
 {
     CoinHistoryPriceChart(coin: Coin.mockCoins.first!)
 }
-
+#endif
 
 
 

@@ -27,6 +27,8 @@ struct CoinDetailScreen: View
         {
             VStack(spacing: 30)
             {
+                CoinHistoryPriceChart(coin: viewModel.coin)
+                
                 sectionTitle("Overview")
                 
                 description
