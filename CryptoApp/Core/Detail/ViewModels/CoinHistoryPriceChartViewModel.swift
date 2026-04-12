@@ -25,8 +25,7 @@ final class CoinHistoryPriceChartViewModel
     
     var maxPricePoint: PricePoint?
     {
-        return chartData.max(by: { $0.price < $1.price }) 
-        
+        return chartData.max(by: { $0.price < $1.price })
     }
     
     var priceRangeX: ClosedRange<Date>
@@ -46,25 +45,22 @@ final class CoinHistoryPriceChartViewModel
         return (minPrice - padding)...(maxPrice + padding)
 //        return minPrice...maxPrice
     }
-
+    
     private func getChartData(from coin: Coin) -> [PricePoint]
     {
-        let totalPoints = coin.sparklineIn7d?.price.count ?? 0
-        let secondsIn7Days: Double = 7 * 24 * 60 * 60
+        guard let prices = coin.sparklineIn7d?.price,
+              !prices.isEmpty else { return [] }
 
-        let interval = secondsIn7Days / Double(totalPoints)
-        
-        let now = Date()
-        
-        let chartData: [PricePoint] = coin.sparklineIn7d?.price
-            .enumerated()
-            .map { index, price in
-                let timeOffset = Double(totalPoints - index) * interval
-                let date = now.addingTimeInterval(-timeOffset)
-                
-                return PricePoint(date: date, price: price)
-            } ?? []
-        
-        return chartData
+        let total = prices.count
+        let now = Date.now
+        let sevenDaysAgo = Calendar.current.date(byAdding: .day, value: -6, to: now)!
+        let totalInterval = now.timeIntervalSince(sevenDaysAgo)
+
+        return prices.indices.map { i in
+            
+            let fraction = Double(i) / Double(total - 1)
+            let date = sevenDaysAgo.addingTimeInterval(fraction * totalInterval)
+            return PricePoint(date: date, price: prices[i])
+        }
     }
 }
