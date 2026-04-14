@@ -14,6 +14,7 @@ final class CoinHistoryPriceChartViewModel
     let minPrice: Double
     let maxPrice: Double
     var chartData: [PricePoint] = []
+    var selectionDate: Date?
     
     init(coin: Coin)
     {
@@ -21,6 +22,17 @@ final class CoinHistoryPriceChartViewModel
         self.minPrice = coin.sparklineIn7d?.price.min() ?? 0.0
         self.maxPrice = coin.sparklineIn7d?.price.max() ?? 0.0
         self.chartData = getChartData(from: coin)
+    }
+    
+    var selectedPricePoint: PricePoint?
+    {
+        guard let selectionDate else { return nil }
+        
+        return chartData.first {
+            Calendar.current.isDate(selectionDate,
+                                    equalTo: $0.date,
+                                    toGranularity: .hour)
+        }
     }
     
     var maxPricePoint: PricePoint?

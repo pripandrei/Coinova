@@ -61,3 +61,4 @@ extension StatisticView
         let (percentageChange, percentageWeight): (Font, Font.Weight)
     }
 }
+
