@@ -12,9 +12,17 @@ struct CoinHistoryPriceChart: View
 {
     @State private var viewModel: CoinHistoryPriceChartViewModel
     
-    init(coin: Coin)
+    var onSelectedPriceChange: ((Double?) -> Void)?
+    
+    private var displayedPrice: Double
+    {
+        viewModel.selectedPricePoint?.price ?? viewModel.coin.currentPrice
+    }
+    
+    init(coin: Coin, onSelectedPriceChange: ((Double?) -> Void)? = nil)
     {
         self._viewModel = State(initialValue: CoinHistoryPriceChartViewModel(coin: coin))
+        self.onSelectedPriceChange = onSelectedPriceChange
     }
     
     @State private var shouldAnimate: Bool = false
@@ -23,12 +31,24 @@ struct CoinHistoryPriceChart: View
     {
         VStack
         {
-            Text("\(viewModel.selectedPricePoint?.price.asCurrenyWithDecimals() ?? "0.0")")
+//            Text("\(viewModel.selectedPricePoint?.price.asCurrenyWithDecimals() ?? "0.00")")
+            Text("\(displayedPrice.asCurrenyWithDecimals())")
+                .font(.title)
+                .fontWeight(.semibold)
+                .monospacedDigit()
+                .foregroundStyle(Color.theme.accent)
+                .padding(.bottom, 30)
+//                .padding(.leading, 30)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
             ZStack
             {
                 priceChartAxisView
                 priceChartInteractiveView
             }
+        }
+        .onChange(of: viewModel.selectedPricePoint?.price) { _, newValue in
+            onSelectedPriceChange?(newValue)
         }
     }
 }
@@ -38,7 +58,8 @@ extension CoinHistoryPriceChart
 {
     private var priceChartAxisView: some View
     {
-        Chart(viewModel.chartData) { item in
+        Chart
+        {
             
         }
         .chartYScale(domain: viewModel.priceRangeY)
@@ -46,17 +67,14 @@ extension CoinHistoryPriceChart
         .chartXAxis {
             AxisMarks(values: xAxisMarks) { value in
                 AxisValueLabel(format: .dateTime.day().month(.abbreviated))
-//                    .foregroundStyle(viewModel.selectionDate == nil ? .secondaryText : .clear)
+                    .foregroundStyle(Color.theme.secondaryText)
             }
         }
         .chartYAxis(.hidden)
-//        .chartXAxis(viewModel.selectionDate == nil ? .visible : .hidden)
-        .opacity(viewModel.selectionDate == nil ? 1.0 : 0.0)
+        .chartXAxis(viewModel.selectionDate == nil ? .visible : .hidden)
+//        .opacity(viewModel.selectionDate == nil ? 1.0 : 0.0)
         .animation(.linear(duration: 0.2), value: viewModel.selectionDate == nil)
         .frame(height: 300)
-        //        .onChange(of: selectedPricePoint?.price, { oldValue, newValue in
-        //            print(newValue)
-        //        })
         .onAppear(perform: {
             shouldAnimate = false
             
@@ -68,10 +86,15 @@ extension CoinHistoryPriceChart
     
     private var priceChartInteractiveView: some View
     {
-        Chart(viewModel.chartData) { item in
-            buildPriceEvolutionAreaMark(from: item)
-            buildPriceEvolutionLineMark(from: item)
+        Chart
+        {
+            ForEach(viewModel.chartData) { item in
+                buildPriceEvolutionAreaMark(from: item)
+                buildPriceEvolutionLineMark(from: item)
+            }
+            buildSelectionLine
         }
+        
         .chartXSelection(value: $viewModel.selectionDate)
         .chartYScale(domain: viewModel.priceRangeY)
 //        .chartXScale(domain: viewModel.priceRangeX)
@@ -80,19 +103,10 @@ extension CoinHistoryPriceChart
         .mask(alignment: .leading) {
             Rectangle()
                 .frame(maxWidth: shouldAnimate ? .infinity : 0)
+                .padding(.top, -20)
         }
         .chartOverlay { proxy in
             getTopPriceMark(inChartProxy: proxy)
-            VStack
-            {
-                if let date = viewModel.selectionDate,
-                   let x = proxy.position(forX: date) {
-                    Text(viewModel.selectionDate?.toMMDD ?? "")
-                        .fixedSize()
-                        .offset(x: x - proxy.plotSize.width / 2) // center-adjust manually
-                    buildSelectionLinePath(withProxy: proxy)
-                }
-            }
         }
         .frame(height: 300)
     }
@@ -110,23 +124,16 @@ extension CoinHistoryPriceChart
             yEnd: .value("Price", item.price)
         )
         .foregroundStyle(
-//            LinearGradient(
-//                colors: [.green.opacity(0.6),
-//                         .green.opacity(0.5),
-//                         .green.opacity(0.4),
-//                         .green.opacity(0.3),
-////                             .green.opacity(0.03),
-//                         .clear
-//                ],
-//                startPoint: .top,
-//                endPoint: .bottom)
             LinearGradient(
-                colors: [.green.opacity(0.25), .clear],
-                startPoint: .top, endPoint: .bottom
+                colors: [
+                    chartLineMarkAttributesColor.opacity(0.5),
+                    chartLineMarkAttributesColor.opacity(0.01),
+//                    .clear
+                ],
+                startPoint: .top,
+                endPoint: .bottom
             )
         )
-//        .interpolationMethod(.catmullRom)
-        
     }
     
     // price evolution mark
@@ -136,28 +143,49 @@ extension CoinHistoryPriceChart
                  y: .value("Price", item.price))
         .interpolationMethod(.cardinal)
         .lineStyle(StrokeStyle(lineWidth: 2.0))
-        .foregroundStyle(.green)
-        .shadow(color: .green.opacity(0.7),
+        .foregroundStyle(chartLineMarkAttributesColor.gradient)
+        .shadow(color: chartLineMarkAttributesColor.opacity(0.4),
                 radius: 10,
                 x: 0,
-                y: 0)
+                y: 5)
     }
     
     // selection line
-    @ViewBuilder
-    private func buildSelectionLinePath(withProxy proxy: ChartProxy) -> some View
+    @ChartContentBuilder
+    private var buildSelectionLine: some ChartContent
     {
-        if let date = viewModel.selectionDate,
-           let x = proxy.position(forX: date)
+        if let selectedPoint = viewModel.selectedPricePoint
         {
-            Path { path in
-                path.move(to: .init(x: x, y: 0))
-                path.addLine(to: .init(x: x, y: proxy.plotSize.height))
+            RuleMark(x: .value("Date", selectedPoint.date),
+                     yStart: .value("Start", viewModel.minPrice),
+                     yEnd: .value("End", viewModel.maxPrice)
+            )
+                .foregroundStyle(.gray)
+                .lineStyle(.init(lineWidth: 1, dash: [3]))
+                .annotation(position: .top,
+                            overflowResolution: .init(x: .fit(to: .chart),
+                                                      y: .disabled))
+            {
+                Text(viewModel.selectionDate?.toMMDDHHmm ?? "")
+                    .font(.footnote)
+                    .foregroundStyle(.white)
+                    .monospacedDigit() // for preventig jitter
+                    .padding(5)
+                    .background(ruleMarkAttributesColor.gradient)
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
             }
-            .stroke(style: .init(lineWidth: 1, dash: [3]))
-            .foregroundStyle(.green)
-        } else {
-            EmptyView()
+            
+            PointMark(x: .value("Date", selectedPoint.date),
+                      y: .value("Price", selectedPoint.price))
+            .foregroundStyle(ruleMarkAttributesColor)
+            .symbolSize(200)
+//
+            PointMark(
+                x: .value("Date", selectedPoint.date),
+                y: .value("Price", selectedPoint.price)
+            )
+            .foregroundStyle(.white)
+            .symbolSize(70)
         }
     }
     
@@ -194,13 +222,36 @@ extension CoinHistoryPriceChart
 
         return [first, last]
     }
+
+    private var ruleMarkAttributesColor: Color
+    {
+        guard let firstPrice = viewModel.chartData.first?.price, let lastPrice = viewModel.chartData.last?.price else {return .gray}
+        
+        if firstPrice < lastPrice
+        {
+            return Color.theme.secondaryGreen
+        }
+        return Color.theme.red
+    }
     
-//    func getSevenDays() -> [Date] {
-//        let uniqueDays = Set(viewModel.chartData.map {
-//            Calendar.current.startOfDay(for: $0.date)
-//        })
-//        return uniqueDays.sorted()
-//    }
+    private var chartLineMarkAttributesColor: Color
+    {
+        guard let firstPrice = viewModel.chartData.first?.price, let lastPrice = viewModel.chartData.last?.price else {return .gray}
+        
+        if firstPrice < lastPrice
+        {
+            return Color.theme.green
+        }
+        return Color.theme.red
+    }
+    
+    //    func getSevenDays() -> [Date] {
+    //        let uniqueDays = Set(viewModel.chartData.map {
+    //            Calendar.current.startOfDay(for: $0.date)
+    //        })
+    //        return uniqueDays.sorted()
+    //    }
+        
 }
 
 #if DEBUG

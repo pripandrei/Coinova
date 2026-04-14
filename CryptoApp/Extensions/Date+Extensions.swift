@@ -15,4 +15,11 @@ extension Date
         formatter.dateFormat = "MM/dd"
         return formatter.string(from: self)
     }
+    
+    var toMMDDHHmm: String
+    {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd HH:mm"
+        return formatter.string(from: self)
+    }
 }
