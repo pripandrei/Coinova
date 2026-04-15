@@ -40,7 +40,7 @@ struct HomeView: View
                     ZStack
                     {
                         contentList
-                        if viewModel.searchService.searchedCoins?.isEmpty == true
+                        if viewModel.searchService.searchedCoins?.isEmpty == true || (viewModel.holdingCoins.isEmpty && viewModel.displayMode == .portfolio)
                         {
                             noCoinDataView
                         }
