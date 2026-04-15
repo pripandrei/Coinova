@@ -178,17 +178,21 @@ extension CoinHistoryPriceChart
            let xPosition = proxy.position(forX: maxPrice.date),
            let yPosition = proxy.position(forY: maxPrice.price)
         {
-            Text("$\(maxPrice.price.abbreviated())")
+            let label = "$\(maxPrice.price.abbreviated())"
+            let estimatedTextWidth = CGFloat(label.count) * 7.0
+            let halfText = estimatedTextWidth / 2
+            let chartWidth = proxy.plotSize.width
+
+            let clampedX = max(halfText, min(xPosition, chartWidth - halfText))
+
+            Text(label)
                 .font(.footnote)
                 .foregroundStyle(Color.theme.secondaryText)
-                .position(x: xPosition - 20,
-                          y: yPosition - 10)
+                .position(x: clampedX, y: yPosition - 10)
                 .opacity(shouldAnimate ? 1.0 : 0.0)
-                .animation(.linear(duration: 0.5),
-                           value: shouldAnimate)
+                .animation(.linear(duration: 0.5), value: shouldAnimate)
                 .opacity(viewModel.selectionDate == nil ? 1.0 : 0.0)
-                .animation(.snappy(duration: 0.2),
-                           value: viewModel.selectionDate)
+                .animation(.snappy(duration: 0.2), value: viewModel.selectionDate)
         }
     }
     
