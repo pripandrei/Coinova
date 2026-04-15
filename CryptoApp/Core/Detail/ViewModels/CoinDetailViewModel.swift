@@ -42,7 +42,7 @@ final class CoinDetailViewModel
     private func createOverviewData() -> [StatisticModel]
     {
         let currentPrice = StatisticModel(title: coin.getTitle(from: .currentPrice),
-                                          value: coin.currentPrice.asCurrenyWithDecimals(),
+                                          value: coin.currentPrice.asCurrencyWithDecimals(),
                                           percentageChange: 0.0)
         let marketCap = StatisticModel(title: coin.getTitle(from: .marketCap),
                                        value: "$" + (coin.marketCap?.abbreviated() ?? "0.0"),
@@ -59,13 +59,13 @@ final class CoinDetailViewModel
     private func createAdditionalDetailsData() -> [StatisticModel]
     {
         let high24h = StatisticModel(title: coin.getTitle(from: .high24h),
-                                     value: coin.high24h?.asCurrenyWithDecimals() ?? "0.0")
+                                     value: coin.high24h?.asCurrencyWithDecimals() ?? "0.0")
         
         let low24h = StatisticModel(title: coin.getTitle(from: .low24h),
-                                    value: coin.low24h?.asCurrenyWithDecimals() ?? "0.0")
+                                    value: coin.low24h?.asCurrencyWithDecimals() ?? "0.0")
         
         let priceChange24h = StatisticModel(title: coin.getTitle(from: .priceChange24h),
-                                            value: coin.priceChange24h?.asCurrenyWithDecimals() ?? "0.0",
+                                            value: coin.priceChange24h?.asCurrencyWithDecimals() ?? "0.0",
                                             percentageChange: coin.priceChangePercentage24h)
         
         let marketCapChange24h = StatisticModel(title: coin.getTitle(from: .marketCapChange24h),

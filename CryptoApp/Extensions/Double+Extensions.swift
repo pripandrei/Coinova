@@ -20,7 +20,9 @@ extension Double
         case 1_000_000_000...: return String(format: "%.2fBn", self / 1_000_000_000)
         case 1_000_000...: return String(format: "%.2fM", self / 1_000_000)
         case 1_000...: return String(format: "%.2fK", self / 1_000)
-        default: return String(format: "%.2fK", self)
+        case 1...: return String(format: "%.2f", self)
+        case 0...: return String(format: "%.8f", self)
+        default: return String(format: "%.2f", self)
         }
     }
     
@@ -40,11 +42,12 @@ extension Double
         return formatter
     }()
     
-    func asCurrenyWithDecimals() -> String
+    func asCurrencyWithDecimals(maximumFractionDigits: Int = 8) -> String
     {
+        Self.currencyFormatter.maximumFractionDigits = maximumFractionDigits
         return Self.currencyFormatter.string(from: (self as NSNumber)) ?? "\(self)"
     }
-    
+
     func asPercentWithDecimals() -> String {
         String(format: "%.2f%%", self)
     }
@@ -53,4 +56,20 @@ extension Double
     {
         return String(format: "%.\(number)f", self)
     }
+//    
+//    func decimalDigits() -> Int {
+//        let str = String(self)
+//        guard let dotIndex = str.firstIndex(of: ".") else { return 0 }
+//        return str.distance(from: str.index(after: dotIndex), to: str.endIndex)
+//    }
+    
+//    var asCurrencyWithDecimals: String
+//    {
+//        switch self
+//        {
+//        case 1...: return String(format: "%.2f", self)
+//        case 0...: return String(format: "%.8f", self)
+//        default: return String(self)
+//        }
+//    }
 }

@@ -129,7 +129,7 @@ extension PortfolioView
             HStack {
                 Text("Current price of \(viewModel.selectedCoin?.symbol.uppercased() ?? ""): ")
                 Spacer()
-                Text("\(viewModel.selectedCoin?.currentPrice.asCurrenyWithDecimals() ?? "0.00")")
+                Text("\(viewModel.selectedCoin?.currentPrice.asCurrencyWithDecimals() ?? "0.00")")
             }
             
             Divider()
@@ -158,7 +158,7 @@ extension PortfolioView
             HStack {
                 Text("Current value: ")
                 Spacer()
-                Text("\(viewModel.getCurrentHoldingsValue().asCurrenyWithDecimals())")
+                Text("\(viewModel.getCurrentHoldingsValue().asCurrencyWithDecimals())")
             }
             
             Text("Invisible placeholder for scroll on keyboard up")

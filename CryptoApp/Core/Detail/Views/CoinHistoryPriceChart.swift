@@ -12,17 +12,9 @@ struct CoinHistoryPriceChart: View
 {
     @State private var viewModel: CoinHistoryPriceChartViewModel
     
-    var onSelectedPriceChange: ((Double?) -> Void)?
-    
-    private var displayedPrice: Double
-    {
-        viewModel.selectedPricePoint?.price ?? viewModel.coin.currentPrice
-    }
-    
-    init(coin: Coin, onSelectedPriceChange: ((Double?) -> Void)? = nil)
+    init(coin: Coin)
     {
         self._viewModel = State(initialValue: CoinHistoryPriceChartViewModel(coin: coin))
-        self.onSelectedPriceChange = onSelectedPriceChange
     }
     
     @State private var shouldAnimate: Bool = false
@@ -31,24 +23,13 @@ struct CoinHistoryPriceChart: View
     {
         VStack
         {
-//            Text("\(viewModel.selectedPricePoint?.price.asCurrenyWithDecimals() ?? "0.00")")
-            Text("\(displayedPrice.asCurrenyWithDecimals())")
-                .font(.title)
-                .fontWeight(.semibold)
-                .monospacedDigit()
-                .foregroundStyle(Color.theme.accent)
-                .padding(.bottom, 30)
-//                .padding(.leading, 30)
-                .frame(maxWidth: .infinity, alignment: .leading)
+            currentPriceTitle
             
             ZStack
             {
                 priceChartAxisView
                 priceChartInteractiveView
             }
-        }
-        .onChange(of: viewModel.selectedPricePoint?.price) { _, newValue in
-            onSelectedPriceChange?(newValue)
         }
     }
 }
@@ -210,11 +191,35 @@ extension CoinHistoryPriceChart
                            value: viewModel.selectionDate)
         }
     }
+    
+    private var currentPriceTitle: some View
+    {
+        Text("\(displayedPrice)")
+            .font(.title)
+            .fontWeight(.semibold)
+            .monospacedDigit()
+            .foregroundStyle(Color.theme.accent)
+            .padding(.bottom, 30)
+//                .padding(.leading, 30)
+            .frame(maxWidth: .infinity, alignment: .leading)
+    }
 }
 
 //MARK: - Helpers
 extension CoinHistoryPriceChart
 {
+    private var displayedPrice: String
+    {
+        let price = viewModel.selectedPricePoint?.price ?? viewModel.coin.currentPrice
+        
+        if price >= 1
+        {
+            return price.asCurrencyWithDecimals(maximumFractionDigits: 2)
+        } else {
+            return price.asCurrencyWithDecimals()
+        }
+    }
+    
     var xAxisMarks: [Date]
     {
         guard let first = viewModel.chartData.first?.date,
@@ -251,7 +256,6 @@ extension CoinHistoryPriceChart
     //        })
     //        return uniqueDays.sorted()
     //    }
-        
 }
 
 #if DEBUG
