@@ -75,6 +75,8 @@ extension CoinRowView
         {
             Text("\(coin.currentHoldingsValues.asCurrencyWithDecimals())")
                 .font(.headline)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             Text("\(coin.currentHoldings?.asDecimals() ?? "0.00")")
                 .font(.subheadline)
                 .fontWeight(.semibold)
@@ -88,6 +90,8 @@ extension CoinRowView
         {
             Text("\(coin.currentPrice.asCurrencyWithDecimals())")
                 .font(.headline)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             Text("\(coin.priceChangePercentage24h?.asDecimals() ?? "0.00")%")
                 .font(.subheadline)
                 .fontWeight(.semibold)
