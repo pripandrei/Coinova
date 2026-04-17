@@ -1,5 +1,5 @@
 {
-  "originHash" : "eb9d5fd912683ca72418b877fbc39fd46696fafa052f51a8a65ac086c4d43ae0",
+  "originHash" : "57a65b4552f7e395f06ce3e485e0c1a0504a974cc29afb9de6bf2d43fe1839ce",
   "pins" : [
     {
       "identity" : "factory",
@@ -26,6 +26,15 @@
       "state" : {
         "revision" : "c92b84898e34ab46ff0dad86c02a0acbe2d87008",
         "version" : "8.8.0"
+      }
+    },
+    {
+      "identity" : "loaderui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ninjaprox/LoaderUI.git",
+      "state" : {
+        "revision" : "1b8ad2dfb06080ffcc51a74da0aeba56a0f7b877",
+        "version" : "0.2.1"
       }
     }
   ],

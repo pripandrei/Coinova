@@ -31,6 +31,7 @@ struct HomeView: View
                     
                     HomeStatsView(showPortfolio: viewModel.displayMode == .portfolio)
                         .padding(.top, 10)
+                        .loadingIndicator(viewModel.marketStatistics.isEmpty, size: 30)
                     
                     SearchBarView(searchQuery: $viewModel.searchQuery)
                         .padding(.vertical, 20)
@@ -40,7 +41,9 @@ struct HomeView: View
                     ZStack
                     {
                         contentList
-                        if viewModel.searchService.searchedCoins?.isEmpty == true || (viewModel.holdingCoins.isEmpty && viewModel.displayMode == .portfolio)
+                            .loadingIndicator(viewModel.areCoinsLoading)
+                        
+                        if shouldShowNoCoinDataView
                         {
                             noCoinDataView
                         }
@@ -204,6 +207,11 @@ extension HomeView
     private func shouldAnimateInfoButton() -> Bool
     {
         return viewModel.displayMode == .livePrices ? false : true
+    }
+    
+    private var shouldShowNoCoinDataView: Bool
+    {
+        return viewModel.searchService.searchedCoins?.isEmpty == true || (viewModel.holdingCoins.isEmpty && viewModel.displayMode == .portfolio)
     }
 }
 

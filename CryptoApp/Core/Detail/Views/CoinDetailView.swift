@@ -32,12 +32,14 @@ struct CoinDetailScreen: View
                 sectionTitle("Overview")
                 
                 description
+                    .loadingIndicator(viewModel.overview.isEmpty, size: 30)
                 
                 overviewGridInfo
                 
                 sectionTitle("Additional Details")
                 
                 additionalDetailsGridInfo
+                    .loadingIndicator(viewModel.overview.isEmpty, size: 30)
                 
                links
             }

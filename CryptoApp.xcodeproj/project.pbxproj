@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		75321BC02F927742001722A8 /* LoaderUI in Frameworks */ = {isa = PBXBuildFile; productRef = 75321BBF2F927742001722A8 /* LoaderUI */; };
 		753F73DB2F6743460012410E /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 753F73DA2F6743460012410E /* Kingfisher */; };
 		75C11D6A2F71DCA8009DFEBE /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 75C11D692F71DCA8009DFEBE /* GRDB */; };
 		75F4323E2F65EA41005CBDD7 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 75F4323D2F65EA41005CBDD7 /* FactoryKit */; };
@@ -44,6 +45,7 @@
 			files = (
 				75C11D6A2F71DCA8009DFEBE /* GRDB in Frameworks */,
 				753F73DB2F6743460012410E /* Kingfisher in Frameworks */,
+				75321BC02F927742001722A8 /* LoaderUI in Frameworks */,
 				75F4323E2F65EA41005CBDD7 /* FactoryKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -90,6 +92,7 @@
 				75F4323D2F65EA41005CBDD7 /* FactoryKit */,
 				753F73DA2F6743460012410E /* Kingfisher */,
 				75C11D692F71DCA8009DFEBE /* GRDB */,
+				75321BBF2F927742001722A8 /* LoaderUI */,
 			);
 			productName = CryptoApp;
 			productReference = 75782F0D2F632195002F0368 /* CryptoApp.app */;
@@ -123,6 +126,7 @@
 				75F4323C2F65EA41005CBDD7 /* XCRemoteSwiftPackageReference "Factory" */,
 				753F73D92F6743460012410E /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				75C11D682F71DCA8009DFEBE /* XCRemoteSwiftPackageReference "GRDB.swift" */,
+				75321BBE2F927742001722A8 /* XCRemoteSwiftPackageReference "LoaderUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 75782F0E2F632195002F0368 /* Products */;
@@ -481,6 +485,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		75321BBE2F927742001722A8 /* XCRemoteSwiftPackageReference "LoaderUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ninjaprox/LoaderUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.1;
+			};
+		};
 		753F73D92F6743460012410E /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -508,6 +520,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		75321BBF2F927742001722A8 /* LoaderUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 75321BBE2F927742001722A8 /* XCRemoteSwiftPackageReference "LoaderUI" */;
+			productName = LoaderUI;
+		};
 		753F73DA2F6743460012410E /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 753F73D92F6743460012410E /* XCRemoteSwiftPackageReference "Kingfisher" */;

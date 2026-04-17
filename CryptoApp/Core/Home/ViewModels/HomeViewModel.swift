@@ -45,6 +45,11 @@ final class HomeViewModel
         }
     }
     
+    var areCoinsLoading: Bool
+    {
+        return coins.isEmpty && displayMode == .livePrices
+    }
+    
     // MARK: - Dependencies
     
     @ObservationIgnored
