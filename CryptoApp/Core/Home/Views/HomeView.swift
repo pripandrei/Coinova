@@ -55,7 +55,7 @@ struct HomeView: View
                 {
                     viewModel.setupSubscribers()
                     viewModel.retrieveHoldingCoins()
-                    viewModel.getCoins()
+                    await viewModel.getCoins()
                 }
             }
             .environment(viewModel)

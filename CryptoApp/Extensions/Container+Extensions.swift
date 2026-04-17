@@ -51,4 +51,11 @@ extension Container
             SearchCoinService()
         }.shared
     }
+    
+    var networkMonitor: Factory<NetworkMonitorProtocol>
+    {
+        self { @MainActor in
+            NetworkMonitor()
+        }.cached
+    }
 }

@@ -88,10 +88,10 @@ final class HomeViewModel
 //MARK: - Data fetch
 extension HomeViewModel
 {
-    func getCoins()
+    func getCoins() async
     {
         do {
-            try coinService.fetchCoins(from: APIEndpoint.coins.url)
+            try await coinService.fetchCoins(from: APIEndpoint.coins.url)
         } catch {
             print("Error getting coins: \(error.localizedDescription)")
         }

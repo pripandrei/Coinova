@@ -13,7 +13,7 @@ protocol CointServiceProtocol
 {
     var coins: CurrentValueSubject<[Coin], Never> { get }
     var holdingCoins: CurrentValueSubject<[Coin], Never> { get }
-    func fetchCoins(from url: String) throws
+    func fetchCoins(from url: String) async throws
     func fetchCoinDetails(from url: String) async throws -> CoinDetail
 }
 
@@ -25,14 +25,24 @@ final class CoinService: CointServiceProtocol
     private var subscribers: Set<AnyCancellable> = []
     
     @Injected(\.localDatabase) private var db
+    @Injected(\.networkMonitor) private var networkMonitor
     
     init() {
        observeHoldingCoins()
     }
     
     /// coin fetch
-    func fetchCoins(from url: String) throws
+    func fetchCoins(from url: String) async throws
     {
+        var reconnectAttempt: Int = 0
+        
+        while !networkMonitor.isReachable
+        {
+            try await Task.sleep(for: .seconds(5))
+            reconnectAttempt += 1
+            print("Recconnect attempt: \(reconnectAttempt)")
+        }
+
         guard let url = URL(string: url) else {throw NetworkError.invalidPath}
         
         URLSession.shared.dataTaskPublisher(for: url)
@@ -53,6 +63,11 @@ final class CoinService: CointServiceProtocol
     /// coin detail fetch
     func fetchCoinDetails(from url: String) async throws -> CoinDetail
     {
+        while !networkMonitor.isReachable
+        {
+            try await Task.sleep(for: .seconds(5))
+        }
+
         guard let url = URL(string: url) else { throw NetworkError.invalidPath}
         
         let (data, urlRespons) = try await URLSession.shared.data(from: url)
