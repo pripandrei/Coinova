@@ -24,12 +24,28 @@ final class MarketDataService: MarketDataServiceProtocol
     @ObservationIgnored
     @Injected(\.networkMonitor) var networkMonitor: NetworkMonitorProtocol
     
+//    func fetchData(from url: String) async throws
+//    {
+//        while !networkMonitor.isReachable
+//        {
+//            try await Task.sleep(for: .seconds(5))
+//        }
+//        
+//        guard let url = URL(string: url) else {throw NetworkError.invalidPath}
+//        
+//        let (data, response) = try await URLSession.shared.data(from: url)
+//        
+//        try NetworkingManager.handleURLResponse(response)
+//        
+//        let _marketData = try JSONDecoder().decode(GlobalData.self, from: data)
+//        self.marketData = _marketData
+//    }
+//
+    
     func fetchData(from url: String) async throws
     {
-        while !networkMonitor.isReachable
-        {
-            try await Task.sleep(for: .seconds(5))
-        }
+        if !networkMonitor.isReachable
+        { try await networkMonitor.waitUntilNetworkIsReachable(withTimeout: 30) }
         
         guard let url = URL(string: url) else {throw NetworkError.invalidPath}
         
@@ -40,4 +56,18 @@ final class MarketDataService: MarketDataServiceProtocol
         let _marketData = try JSONDecoder().decode(GlobalData.self, from: data)
         self.marketData = _marketData
     }
+
+//    func requestData(from endpoin: APIEndpoint) async throws
+//    {
+//        if !networkMonitor.isReachable
+//        { try await networkMonitor.waitUntilNetworkIsReachable(withTimeout: 30) }
+//        
+//        let path = endpoin.url
+//        
+//        switch endpoin
+//        {
+//        case .marketData: try await fetchData(from: path)
+//        default: break
+//        }
+//    }
 }

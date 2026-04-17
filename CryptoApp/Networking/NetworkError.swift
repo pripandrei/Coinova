@@ -15,6 +15,8 @@ enum NetworkError: LocalizedError
     case notFound
     case serverError(Int)
     case unexpectedStatusCode(Int)
+    case noInternetConnection
+    
     
     var errorDescription: String?
     {
@@ -26,6 +28,7 @@ enum NetworkError: LocalizedError
         case .notFound: return "Not found"
         case .serverError(let code): return "Server error with code: \(code)"
         case .unexpectedStatusCode(let code): return "Unexpected status code: \(code)"
+        case .noInternetConnection: return "No internet connection"
         }
     }
 }

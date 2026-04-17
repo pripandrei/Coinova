@@ -34,13 +34,9 @@ final class CoinService: CointServiceProtocol
     /// coin fetch
     func fetchCoins(from url: String) async throws
     {
-        var reconnectAttempt: Int = 0
-        
-        while !networkMonitor.isReachable
+        if !networkMonitor.isReachable
         {
-            try await Task.sleep(for: .seconds(5))
-            reconnectAttempt += 1
-            print("Recconnect attempt: \(reconnectAttempt)")
+            try await networkMonitor.waitUntilNetworkIsReachable(withTimeout: 30)
         }
 
         guard let url = URL(string: url) else {throw NetworkError.invalidPath}
@@ -63,11 +59,11 @@ final class CoinService: CointServiceProtocol
     /// coin detail fetch
     func fetchCoinDetails(from url: String) async throws -> CoinDetail
     {
-        while !networkMonitor.isReachable
+        if !networkMonitor.isReachable
         {
-            try await Task.sleep(for: .seconds(5))
+            try await networkMonitor.waitUntilNetworkIsReachable(withTimeout: 30)
         }
-
+        
         guard let url = URL(string: url) else { throw NetworkError.invalidPath}
         
         let (data, urlRespons) = try await URLSession.shared.data(from: url)
