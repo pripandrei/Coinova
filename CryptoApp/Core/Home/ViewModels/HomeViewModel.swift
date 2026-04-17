@@ -100,7 +100,7 @@ extension HomeViewModel
     func getMarketStats() async
     {
         do {
-            try await marketDataService.fetchData(from: APIEndpoint.marketData.url)
+            try await marketDataService.requestData(from: APIEndpoint.marketData)
         } catch {
             print("Error getting market stats: \(error.localizedDescription)")
         }

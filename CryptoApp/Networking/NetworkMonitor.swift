@@ -36,24 +36,7 @@ final class NetworkMonitor: NetworkMonitorProtocol
         }
         monitor.start(queue: monitorQueue)
     }
-    
-//    func waitUntilNetworkIsReachable1() async
-//    {
-//        if isReachable { return }
-//
-//        await withCheckedContinuation { continuation in
-//            var cancellable: AnyCancellable?
-//
-//            cancellable = self.$isReachable
-//                .sink { isReachable in
-//                    if isReachable {
-//                        continuation.resume()
-//                        cancellable?.cancel()
-//                    }
-//                }
-//        }
-//    }
-    
+
     func waitUntilNetworkIsReachable(withTimeout timeoutInSeconds: Double = 30) async throws
     {
         let date = Date()
