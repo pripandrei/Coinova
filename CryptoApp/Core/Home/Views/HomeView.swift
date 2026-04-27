@@ -87,7 +87,7 @@ extension HomeView
             .sheet(item: $sheetOption) { item in
                 switch item {
                 case .portfolio: PortfolioView(viewModel.coins)
-                case .settings: Text("implement settings")
+                case .settings: SettingsView()
                 }
             }
             

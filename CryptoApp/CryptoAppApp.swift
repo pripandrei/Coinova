@@ -12,6 +12,7 @@ import FactoryKit
 struct CryptoAppApp: App
 {
     @State private var navigationRouter = NavigationRouter()
+    @AppStorage(AppAppearanceMode.key) var appAppearance: AppAppearanceMode?
     
     init() {
         #if DEBUG
@@ -24,6 +25,7 @@ struct CryptoAppApp: App
         WindowGroup {
             HomeView()
                 .environment(navigationRouter)
+                .preferredColorScheme(appAppearance?.resolvedScheme)
         }
     }
 }
