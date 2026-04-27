@@ -21,6 +21,24 @@ enum AppAppearanceMode: String, CaseIterable, Identifiable {
         case .system: return nil  // nil = follow device
         }
     }
-    
+}
+
+extension AppAppearanceMode
+{
     static let key = "appAppearance"
+    
+    func applyAppearance(_ mode: AppAppearanceMode)
+    {
+        guard let window = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .flatMap({ $0.windows })
+            .first(where: { $0.isKeyWindow }) else { return }
+        
+        switch mode
+        {
+        case .dark:   window.overrideUserInterfaceStyle = .dark
+        case .light:  window.overrideUserInterfaceStyle = .light
+        case .system: window.overrideUserInterfaceStyle = .unspecified
+        }
+    }
 }

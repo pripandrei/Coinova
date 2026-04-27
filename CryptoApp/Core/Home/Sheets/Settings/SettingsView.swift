@@ -31,10 +31,6 @@ struct SettingsView: View
                 }
                 .hideToolbarInteractionIfNeeded()
             }
-//            .onChange(of: currentTheme) { _, newValue in
-//                appAppearance = newValue
-//            }
-//            .preferredColorScheme(appAppearance?.resolvedScheme)
         }
     }
 }
@@ -83,18 +79,18 @@ extension SettingsView
     
     private var appearanceMenu: some View
     {
-        Picker(selection: $appAppearance)
-        {
+        Picker(selection: $appAppearance) {
             ForEach(AppAppearanceMode.allCases) { item in
-                HStack
-                {
-                    Text(item.rawValue)
-                        .tag(item)
-                }
+                Text(item.rawValue)
+                    .tag(item)
             }
         } label: { }
+            .pickerStyle(.menu)
+            .frame(maxWidth: 150,
+                   maxHeight: 20,
+                   alignment: .trailing)
     }
-
+    
     private var aboutUsSection: some View
     {
         Section("About us".uppercased()) {
