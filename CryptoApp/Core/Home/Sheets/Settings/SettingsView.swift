@@ -11,15 +11,8 @@ import Foundation
 
 struct SettingsView: View
 {
-    @AppStorage(AppAppearanceMode.key) var appAppearance: AppAppearanceMode?
-    
+    @AppStorage(AppAppearanceMode.key) var appAppearance: AppAppearanceMode = .system
     @Environment(\.dismiss) var dismiss
-    @State private var currentTheme: AppAppearanceMode = .system
-    
-    init()
-    {
-        self._currentTheme = .init(initialValue: appAppearance ?? .system)
-    }
     
     var body: some View
     {
@@ -31,8 +24,6 @@ struct SettingsView: View
                 aboutUsSection
             }
             .listStyle(.grouped)
-//            .animation(.bouncy(duration: 1.25),
-//                       value: currentTheme)
             .navigationTitle("Settings")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -40,10 +31,10 @@ struct SettingsView: View
                 }
                 .hideToolbarInteractionIfNeeded()
             }
-            .onChange(of: currentTheme) { _, newValue in
-                appAppearance = newValue
-            }
-            .preferredColorScheme(currentTheme.resolvedScheme)
+//            .onChange(of: currentTheme) { _, newValue in
+//                appAppearance = newValue
+//            }
+//            .preferredColorScheme(appAppearance?.resolvedScheme)
         }
     }
 }
@@ -92,30 +83,18 @@ extension SettingsView
     
     private var appearanceMenu: some View
     {
-        Menu {
-            Picker(selection: $currentTheme)
-            {
-                ForEach(AppAppearanceMode.allCases) { item in
-                    HStack
-                    {
-                        Text(item.rawValue)
-                    }
+        Picker(selection: $appAppearance)
+        {
+            ForEach(AppAppearanceMode.allCases) { item in
+                HStack
+                {
+                    Text(item.rawValue)
+                        .tag(item)
                 }
-            } label: {
-                EmptyView()
             }
-        } label: {
-            HStack
-            {
-                Text(currentTheme.rawValue.capitalized)
-                Image(systemName: "chevron.up.chevron.down")
-            }
-            .foregroundStyle(Color.theme.accent)
-            .frame(maxWidth: 150, alignment: .trailing)
-        }
+        } label: { }
     }
 
-    
     private var aboutUsSection: some View
     {
         Section("About us".uppercased()) {
@@ -194,33 +173,6 @@ extension SettingsView
             }
         }
     }
-}
-
-enum AppAppearanceMode: String, CaseIterable, Identifiable
-{
-    case dark
-    case light
-    case system
-    
-    var id: Self
-    {
-        return self
-    }
-    
-    var resolvedScheme: ColorScheme?
-    {
-        switch self
-        {
-        case .dark: return .dark
-        case .light: return .light
-        case .system: return nil
-        }
-    }
-}
-
-extension AppAppearanceMode
-{
-    static let key = "appAppearance"
 }
 
 
