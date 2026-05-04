@@ -1,0 +1,103 @@
+{
+  "fill" : {
+    "automatic-gradient" : "extended-srgb:0.00000,0.47843,1.00000,1.00000"
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Firefly_Gemini Flash.png",
+          "name" : "Firefly_Gemini Flash",
+          "position-specializations" : [
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1.5,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "watchOS",
+              "value" : {
+                "scale" : 1.74,
+                "translation-in-points" : [
+                  -7,
+                  9
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "image-name" : "Firefly_Gemini Flash.png",
+          "name" : "Firefly_Gemini Flash",
+          "position-specializations" : [
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1.52,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "watchOS",
+              "value" : {
+                "scale" : 1.74,
+                "translation-in-points" : [
+                  -7,
+                  9
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "image-name" : "Firefly_Gemini Flash.png",
+          "name" : "Firefly_Gemini Flash",
+          "position-specializations" : [
+            {
+              "idiom" : "square",
+              "value" : {
+                "scale" : 1.52,
+                "translation-in-points" : [
+                  0,
+                  0
+                ]
+              }
+            },
+            {
+              "idiom" : "watchOS",
+              "value" : {
+                "scale" : 1.74,
+                "translation-in-points" : [
+                  -7,
+                  9
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
