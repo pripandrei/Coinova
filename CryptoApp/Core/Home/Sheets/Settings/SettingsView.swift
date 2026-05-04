@@ -162,10 +162,10 @@ extension SettingsView
         {
             switch self
             {
-            case .learnMore: return URL(string: "https://github.com/andrei-pripa")!
-            case .privacyPolicy: return URL(string: "https://github.com/andrei-pripa")!
-            case .termsOfService: return URL(string: "https://github.com/andrei-pripa")!
-            case .website: return URL(string: "https://github.com/andrei-pripa")!
+            case .learnMore: return URL(string: "https://google.com")!
+            case .privacyPolicy: return URL(string: "https://google.com")!
+            case .termsOfService: return URL(string: "https://google.com")!
+            case .website: return URL(string: "https://google.com")!
             }
         }
     }

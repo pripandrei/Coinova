@@ -19,7 +19,7 @@ final class HomeViewModel
     private(set) var holdingCoins: [Coin] = []
     private(set) var marketStatistics: [StatisticModel] = []
     private(set) var subscribers: Set<AnyCancellable> = []
-    
+
     // MARK: - computed properties
     var coinSortOption: CoinSortOption = .minRank
     {
@@ -79,9 +79,32 @@ final class HomeViewModel
                   value: data.data.btcDominance),
             
             .init(title: StatisticModel.Title.portfolio.rawValue,
-                  value: "$" + "0.0",
-                  percentageChange: -34.3)
+                  value: "\(getTotalHoldingsAmount().asCurrencyWithDecimals(maximumFractionDigits: 2))",
+                  percentageChange: getPortfolioHoldingsPercentageChange())
         ]
+    }
+    
+    private func getTotalHoldingsAmount() -> Double
+    {
+        let totalHoldings = holdingCoins.reduce(into: 0.0, { partialResult, coin in
+            return partialResult += coin.currentHoldingsValues
+        })
+        return totalHoldings
+    }
+    
+    private func getPortfolioHoldingsPercentageChange() -> Double
+    {
+        let previousValues = holdingCoins
+            .map { coint  in
+                let currentAmount = coint.currentHoldingsValues
+                let percentageChange = coint.priceChangePercentage24h ?? 0.0 / 100
+                let previousValue = currentAmount / (1 + percentageChange)
+                return previousValue
+            }
+            .reduce(0.0, +)
+        
+        let percentageCahnge = ((getTotalHoldingsAmount() - previousValues) / previousValues) * 100
+        return percentageCahnge
     }
 }
 

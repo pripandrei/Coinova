@@ -7,14 +7,16 @@
 
 import SwiftUI
 
-enum AppAppearanceMode: String, CaseIterable, Identifiable {
+enum AppAppearanceMode: String, CaseIterable, Identifiable
+{
     case dark = "dark"
     case light = "light"
     case system = "system"
     
     var id: Self { self }
     
-    var resolvedScheme: ColorScheme? {
+    var resolvedScheme: ColorScheme?
+    {
         switch self {
         case .dark: return .dark
         case .light: return .light
