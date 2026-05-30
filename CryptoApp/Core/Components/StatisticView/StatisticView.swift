@@ -11,10 +11,11 @@ struct StatisticView: View
 {
     let statisticData: StatisticModel
     let fontSchema: StatisticFontSchema
+    let alignment: HorizontalAlignment
     
     var body: some View
     {
-        VStack(alignment: .leading, spacing: 5)
+        VStack(alignment: alignment, spacing: 5)
         {
             Text(statisticData.title)
                 .font(fontSchema.title)
@@ -25,6 +26,8 @@ struct StatisticView: View
                 .font(fontSchema.value)
                 .fontWeight(fontSchema.valueWeight)
                 .foregroundStyle(Color.theme.accent)
+                .lineLimit(1)
+                .minimumScaleFactor(0.85)
             
             if let percentage = statisticData.percentageChange,
                percentage != 0.0

@@ -13,7 +13,7 @@ final class MockMarketDataService: MarketDataServiceProtocol
 {
     var marketData: GlobalData?
     
-    func fetchData(from url: String) async throws
+    func requestData(from endpoin: APIEndpoint) async throws
     {
         self.marketData = GlobalData.mockData
     }

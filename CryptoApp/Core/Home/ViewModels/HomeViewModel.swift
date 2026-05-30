@@ -80,6 +80,7 @@ final class HomeViewModel
             
             .init(title: StatisticModel.Title.portfolio.rawValue,
                   value: "\(getTotalHoldingsAmount().asCurrencyWithDecimals(maximumFractionDigits: 2))",
+//                  value: "\(getTotalHoldingsAmount().abbreviated())",
                   percentageChange: getPortfolioHoldingsPercentageChange())
         ]
     }

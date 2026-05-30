@@ -104,7 +104,8 @@ extension CoinDetailScreen
         {
             ForEach(viewModel.overview) { stat in
                 StatisticView(statisticData: stat,
-                              fontSchema: Self.statisticFontSchema)
+                              fontSchema: Self.statisticFontSchema,
+                              alignment: .leading)
 //                .padding(.horizontal, 20)
             }
         }
@@ -116,7 +117,8 @@ extension CoinDetailScreen
         {
             ForEach(viewModel.additionalDetails) { stat in
                 StatisticView(statisticData: stat,
-                              fontSchema: Self.statisticFontSchema)
+                              fontSchema: Self.statisticFontSchema,
+                              alignment: .leading)
             }
         }
     }
