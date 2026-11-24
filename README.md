@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="screenshots/app-icon.png" width="150" alt="Coinova app icon" />
+  <img src="screenshots/app-icon.png" width="200" alt="Coinova app icon" />
 </p>
 
 <h1 align="center">Coinova</h1>
@@ -148,7 +148,7 @@ Coinova uses the public [CoinGecko API](https://www.coingecko.com/en/api):
 
 ## 📄 License
 
-Released under the **MIT License**.
+Released under the **MIT License** — see [LICENSE](LICENSE).
 
 ---
 
