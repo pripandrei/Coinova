@@ -98,14 +98,22 @@ final class HomeViewModel
         let previousValues = holdingCoins
             .map { coint  in
                 let currentAmount = coint.currentHoldingsValues
-                let percentageChange = coint.priceChangePercentage24h ?? 0.0 / 100
+                let percentageChange = (coint.priceChangePercentage24h ?? 0.0) / 100
                 let previousValue = currentAmount / (1 + percentageChange)
                 return previousValue
             }
             .reduce(0.0, +)
         
+        guard previousValues > 0 else { return 0 }
+        
         let percentageCahnge = ((getTotalHoldingsAmount() - previousValues) / previousValues) * 100
         return percentageCahnge
+    }
+    
+    private func refreshStatistics()
+    {
+        guard let marketData = marketDataService.marketData else { return }
+        self.marketStatistics = self.makeStatistics(from: marketData)
     }
 }
 
@@ -148,8 +156,10 @@ extension HomeViewModel
             }.store(in: &subscribers)
         
         /// holdings
-        coinService.holdingCoins.sink { holdings in
+        coinService.holdingCoins.sink { [weak self] holdings in
+            guard let self else { return }
             self.holdingCoins = holdings
+            self.refreshStatistics()
         }.store(in: &subscribers)
     }
     
