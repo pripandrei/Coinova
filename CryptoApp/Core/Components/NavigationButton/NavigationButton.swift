@@ -46,6 +46,8 @@ extension NavigationButton
                        height: 45)
         case .text(let string):
             Text(string)
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 8)
         }

@@ -162,6 +162,7 @@ extension PortfolioView
             }
             
             Text("Invisible placeholder for scroll on keyboard up")
+                .lineLimit(1)
                 .opacity(0)
                 .id(Self.itemVisibilityID)
         }
