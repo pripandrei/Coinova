@@ -44,22 +44,6 @@
 
 ---
 
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Language | Swift |
-| UI | SwiftUI |
-| Reactive state | Combine + Observation (`@Observable`) |
-| Persistence | GRDB (SQLite) |
-| Networking | URLSession + Combine |
-| Dependency injection | Factory |
-| Image loading & caching | Kingfisher |
-| Loading indicators | LoaderUI |
-| Data source | [CoinGecko API](https://www.coingecko.com/en/api) |
-
----
-
 ## 🏗 Architecture
 
 Coinova follows **MVVM** with a lightweight service layer and dependency injection:
@@ -151,9 +135,3 @@ Coinova uses the public [CoinGecko API](https://www.coingecko.com/en/api):
 Released under the **MIT License** — see [LICENSE](LICENSE).
 
 ---
-
-## 👤 Author
-
-**Andrei Pripa**
-
-- GitHub: [@pripandrei](https://github.com/pripandrei)
